@@ -1,7 +1,7 @@
 CC = cc
 CFLAGS = -O2 -fPIC
 AR = ar
-TARGET = libcocoawebview.a
+TARGET = cocoawebview.a
 
 all: $(TARGET)
 
