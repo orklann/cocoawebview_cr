@@ -1,4 +1,4 @@
-@[Link("cocoawebview")]
+@[Link("libcocoawebview")]
 lib Native
   fun add(a : Int32, b : Int32) : Int32
 end
