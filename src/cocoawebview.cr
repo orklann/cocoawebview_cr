@@ -1,4 +1,4 @@
-@[Link(ldflags: "#{__DIR__}/../ext/cocoawebview.m")]
+@[Link(ldflags: "-framework Foundation #{__DIR__}/../ext/cocoawebview.m")]
 lib Native
   fun add(a : Int32, b : Int32) : Int32
 end
