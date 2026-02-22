@@ -1,4 +1,4 @@
-@[Link("cocoawebview")]
+@[Link(ldflags: "#{__DIR__}/../ext/cocoawebview.c")]
 lib Native
   fun add(a : Int32, b : Int32) : Int32
 end
