@@ -14,8 +14,8 @@ module Cocoawebview
     @handle : Void*
     def initialize
       @handle = Native.nsapp_init()
-      Native.set_on_launch(->{ app_did_launch })
-      Native.set_on_terminate(->{ app_will_exit })
+      Native.set_on_launch(app_did_launch)
+      Native.set_on_terminate(app_will_exit)
     end
 
     def app_did_launch
