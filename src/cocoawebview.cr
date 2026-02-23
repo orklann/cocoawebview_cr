@@ -110,7 +110,15 @@ module Cocoawebview
         raise "Failed to initialize CocoaWebview"
       end
 
-      Native.set_on_webview_message(webview_msg_handler)
+      # Pass a non-capturing Proc to C
+      Native.set_on_webview_message ->(c_str : LibC::Char*) {
+        # Convert C string to Crystal String
+        msg = String.new(c_str)
+
+        # Since the C side is likely global, we need a way to find
+        # the right instance, or just handle it globally for now:
+        puts "Received from JS: #{msg}"
+      }
     end
 
     def webview_msg_handler(msg)
