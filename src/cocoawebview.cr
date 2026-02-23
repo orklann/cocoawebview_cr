@@ -129,13 +129,10 @@ module Cocoawebview
       msg = String.new(c_str)
       data = JSON.parse(msg)
 
-      puts msg
-
       # We use .as_s and .as_a to tell Crystal these are Strings and Arrays
       function_name = data["function"].as_s
       args = data["args"].as_a
 
-      # 4. Look up the callback in your @bindings Hash
       if callback = @bindings[function_name]?
         # Note: In Crystal, you cannot splat (*args) into a Proc call
         # as easily as Ruby because Proc arguments are typed and fixed.
