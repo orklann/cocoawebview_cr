@@ -50,7 +50,7 @@ module Cocoawebview
     end
   end
 
-  class Webview
+  class CocoaWebview
     @webview_ptr : Void*
     @vars = {} of String => String # Equivalent to rb_hash_new
     @bindings = {} of String => String
