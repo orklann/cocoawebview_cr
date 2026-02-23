@@ -369,3 +369,8 @@ SimplePoint webview_get_pos(void *webview_ptr) {
     p.y = y;
     return p;
 }
+
+void webview_dragging(void *webview_ptr) {
+    CocoaWebview *webview = (__bridge CocoaWebview *)webview_ptr;
+    [webview dragging];
+}

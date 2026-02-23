@@ -36,6 +36,8 @@ lib Native
   end
 
   fun webview_get_pos(ptr : Void*) : SimplePoint
+
+  fun webview_dragging(ptr : Void*) : Void
 end
 
 module Cocoawebview
@@ -130,6 +132,10 @@ module Cocoawebview
     def get_pos : Array(Int32)
       c_point = Native.webview_get_pos(@webview_ptr)
       [c_point.x, c_point.y]
+    end
+
+    def dragging
+      Native.webview_dragging(@webview_ptr)
     end
 
     def finalize
