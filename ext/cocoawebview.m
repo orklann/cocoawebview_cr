@@ -222,6 +222,7 @@ typedef struct {
         //VALUE rb_body = rb_str_new_cstr(body);
         //rb_funcall(rb_cocoawebview, rb_intern("webview_msg_handler"), 1, rb_body);
         
+        NSLog(@"msg in ojbc!");
         if (on_webview_message_cb) on_webview_message_cb(body);
     }
 }
