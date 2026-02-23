@@ -347,3 +347,9 @@ SimpleSize webview_get_size(void *webview_ptr) {
     s.height = (int)frame.size.height;
     return s;
 }
+
+void webview_set_pos(void *webview_ptr, int x, int y) {
+    CocoaWebview *webview = (__bridge CocoaWebview *)webview_ptr;
+    NSPoint newOrigin = NSMakePoint(x, y);
+    [webview setFrameOrigin:newOrigin];
+}
