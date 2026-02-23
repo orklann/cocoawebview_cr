@@ -55,7 +55,7 @@ module Cocoawebview
     @vars = {} of String => String # Equivalent to rb_hash_new
     @bindings = {} of String => String
 
-    def self.create(debug: false, min: true, resize: true, close: true, move_title_buttons: false, delta_y: 10, hide_title_bar: true, &block)
+    def self.create(debug = false, min = true, resize = true, close = true, move_title_buttons = false, delta_y = 10, hide_title_bar = true, &block : -> _)
       style = NSWindowStyleMaskTitled | NSWindowStyleMaskFullSizeContentView
 
       style = style | NSWindowStyleMaskMiniaturizable if min
