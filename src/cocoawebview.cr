@@ -118,9 +118,8 @@ module Cocoawebview
       Native.set_on_webview_message ->(c_str : LibC::Char*) {
         # This block doesn't capture 'self', so C can use it.
         # We find the instance via the registry.
-        if webview = @@instances.values.first? # Or a specific lookup
-          webview.webview_msg_handler(c_str)
-        end
+        webview = @@instances[@webview_ptr] # Or a specific lookup
+        webview.webview_msg_handler(c_str)
       }
     end
 
