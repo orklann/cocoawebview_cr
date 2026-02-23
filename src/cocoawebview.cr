@@ -18,6 +18,13 @@ lib Native
 end
 
 module Cocoawebview
+  NSWindowStyleMaskResizable = 8
+  NSWindowStyleMaskMiniaturizable = 4
+  NSWindowStyleMaskTitled = 1
+  NSWindowStyleMaskClosable = 2
+  NSWindowStyleMaskFullSizeContentView = (1 << 15)
+  NSWindowStyleMaskFullScreen = (1 << 14)
+
   class NSApp
     @handle : Void*
     def initialize
@@ -47,6 +54,22 @@ module Cocoawebview
     @webview_ptr : Void*
     @vars = {} of String => String # Equivalent to rb_hash_new
     @bindings = {} of String => String
+
+    def self.create(debug: false, min: true, resize: true, close: true, move_title_buttons: false, delta_y: 10, hide_title_bar: true, &block)
+      style = NSWindowStyleMaskTitled | NSWindowStyleMaskFullSizeContentView
+
+      style = style | NSWindowStyleMaskMiniaturizable if min
+      style = style | NSWindowStyleMaskResizable if resize
+      style = style | NSWindowStyleMaskClosable if close
+
+      if hide_title_bar
+        style &= ~NSWindowStyleMaskFullScreen
+      end
+
+      webview = new(debug, style, move_title_buttons, delta_y, hide_title_bar)
+      #webview.callback = block
+      webview
+    end
 
     def initialize(debug : Bool, style : Int32, move_title_buttons : Bool, delta_y : Int32, hide_title_bar : Bool)
       @webview_ptr = Native.webview_initialize(
