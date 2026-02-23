@@ -380,3 +380,8 @@ void webview_center(void *webview_ptr) {
     CocoaWebview *webview = (__bridge CocoaWebview *)webview_ptr;
     [webview center];
 }
+
+void webview_hide(void *webview_ptr) {
+    CocoaWebview *webview = (__bridge CocoaWebview *)webview_ptr;
+    [webview orderOut:nil];
+}
