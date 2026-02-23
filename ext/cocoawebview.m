@@ -315,3 +315,10 @@ void webview_show(void *webview_ptr) {
     [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
     [webview makeKeyAndOrderFront:nil];
 }
+
+void webview_eval(void *webview_ptr, const char *js_code) {
+    CocoaWebview *webview = (__bridge CocoaWebview *)webview_ptr;
+    NSString *ns_js = [NSString stringWithUTF8String:js_code];
+    
+    [webview eval:ns_js];
+}

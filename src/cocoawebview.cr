@@ -17,6 +17,7 @@ lib Native
   ) : Void*
 
   fun webview_show(ptr : Void*)
+  fun webview_eval(ptr : Void*, js : LibC::Char*) : Void
 end
 
 module Cocoawebview
@@ -89,6 +90,10 @@ module Cocoawebview
 
     def show
       Native.webview_show(@webview_ptr)
+    end
+
+    def eval(code : String)
+      Native.webview_eval(@webview_ptr, code.to_unsafe)
     end
 
     def finalize
