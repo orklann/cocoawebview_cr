@@ -5,6 +5,17 @@
 
 NSApplication *application = nil;
 
+// Define the function pointer type
+typedef void (*CrystalCallback)();
+
+// Global variables to hold the Crystal callbacks
+static CrystalCallback on_terminate_cb = NULL;
+static CrystalCallback on_launch_cb = NULL;
+
+// Setter functions that Crystal will call to "register" the callbacks
+void set_on_terminate(CrystalCallback cb) { on_terminate_cb = cb; }
+void set_on_launch(CrystalCallback cb) { on_launch_cb = cb; }
+
 @interface AppDelegate : NSObject <NSApplicationDelegate> {
 
 }
@@ -20,8 +31,7 @@ NSApplication *application = nil;
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
-    //rb_funcall(app, rb_intern("app_will_exit"), 0);
-    NSLog(@"app will exit!");
+    if (on_terminate_cb) on_terminate_cb();
 }
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag {
@@ -31,8 +41,7 @@ NSApplication *application = nil;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
-    //rb_funcall(app, rb_intern("app_did_launch"), 0);
-    NSLog(@"app did launch!");
+    if (on_launch_cb) on_launch_cb();
 }
 @end
 
