@@ -21,6 +21,11 @@ typedef struct {
     int height;
 } SimpleSize;
 
+typedef struct {
+    int x;
+    int y;
+} SimplePoint;
+
 @interface AppDelegate : NSObject <NSApplicationDelegate> {
 
 }
@@ -352,4 +357,15 @@ void webview_set_pos(void *webview_ptr, int x, int y) {
     CocoaWebview *webview = (__bridge CocoaWebview *)webview_ptr;
     NSPoint newOrigin = NSMakePoint(x, y);
     [webview setFrameOrigin:newOrigin];
+}
+
+SimplePoint webview_get_pos(void *webview_ptr) {
+    NSView *webview = (__bridge NSView *)webview_ptr;
+    NSRect frame = [webview frame];
+    int x = frame.origin.x;
+    int y = frame.origin.y;
+    SimplePoint p;
+    p.x = x;
+    p.y = y;
+    return p;
 }

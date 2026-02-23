@@ -29,6 +29,13 @@ lib Native
   fun webview_get_size(ptr : Void*) : SimpleSize
 
   fun webview_set_pos(ptr : Void*, x : Int32, y : Int32) : Void
+
+  struct SimplePoint
+    x : Int32
+    y : Int32
+  end
+
+  fun webview_get_pos(ptr : Void*) : SimplePoint
 end
 
 module Cocoawebview
@@ -118,6 +125,11 @@ module Cocoawebview
 
     def set_pos(x : Int32, y : Int32)
       Native.webview_set_pos(@webview_ptr, x, y)
+    end
+
+    def get_pos : Array(Int32)
+      c_point = Native.webview_get_pos(@webview_ptr)
+      [c_point.x, c_point.y]
     end
 
     def finalize
