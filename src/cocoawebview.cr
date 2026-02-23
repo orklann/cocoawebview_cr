@@ -7,6 +7,7 @@ lib Native
   # Map the setter functions
   fun set_on_terminate(cb : -> Void)
   fun set_on_launch(cb : -> Void)
+  fun set_on_webview_message(cb : -> Void)
 
   fun webview_initialize(
     debug : Bool,
@@ -106,6 +107,17 @@ module Cocoawebview
       if @webview_ptr.null?
         raise "Failed to initialize CocoaWebview"
       end
+
+      Native.set_on_webview_message(webview_msg_handler)
+    end
+
+    def webview_msg_handler(msg)
+        puts msg
+        #hash = JSON.parse(msg)
+        #function = hash["function"]
+        #args = hash["args"]
+        #callback = @bindings[function]
+        #callback.call(*args) if callback
     end
 
     def show

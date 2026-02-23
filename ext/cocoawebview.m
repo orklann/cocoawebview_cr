@@ -8,13 +8,17 @@ NSApplication *application = nil;
 // Define the function pointer type
 typedef void (*CrystalCallback)();
 
+typedef void (*CrystalMessageCallback)(const char*);
+
 // Global variables to hold the Crystal callbacks
 static CrystalCallback on_terminate_cb = NULL;
 static CrystalCallback on_launch_cb = NULL;
+static CrystalMessageCallback on_webview_message_cb = NULL;
 
 // Setter functions that Crystal will call to "register" the callbacks
 void set_on_terminate(CrystalCallback cb) { on_terminate_cb = cb; }
 void set_on_launch(CrystalCallback cb) { on_launch_cb = cb; }
+void set_on_webview_message(CrystalMessageCallback cb) { on_webview_message_cb = cb; }
 
 typedef struct {
     int width;
@@ -217,6 +221,8 @@ typedef struct {
         /* TODO: Implement crystal callback for javascript binding callback */
         //VALUE rb_body = rb_str_new_cstr(body);
         //rb_funcall(rb_cocoawebview, rb_intern("webview_msg_handler"), 1, rb_body);
+        
+        if (on_webview_message_cb) on_webview_message_cb(body);
     }
 }
 
