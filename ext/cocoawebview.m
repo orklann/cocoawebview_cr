@@ -8,7 +8,7 @@ NSApplication *application = nil;
 // Define the function pointer type
 typedef void (*CrystalCallback)();
 
-typedef void (*CrystalMessageCallback)(const char*);
+typedef void (*CrystalMessageCallback)(void* webview_ptr, const char* msg);
 
 // Global variables to hold the Crystal callbacks
 static CrystalCallback on_terminate_cb = NULL;
@@ -218,7 +218,11 @@ typedef struct {
       didReceiveScriptMessage:(WKScriptMessage *)message {
     if ([message.name isEqualToString:@"native"]) {
         const char *body = [message.body UTF8String];
-        if (on_webview_message_cb) on_webview_message_cb(body);
+        if (on_webview_message_cb) {
+            // 'self' here refers to the specific CocoaWebview instance 
+            // that received the message
+            on_webview_message_cb((__bridge void *)self, [message.body UTF8String]);
+        }
     }
 }
 

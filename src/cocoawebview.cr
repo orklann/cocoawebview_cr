@@ -10,7 +10,7 @@ lib Native
   fun set_on_terminate(cb : -> Void)
   fun set_on_launch(cb : -> Void)
 
-  alias CrystalMessageCallback = LibC::Char* -> Nil
+  alias CrystalMessageCallback = (Void*, LibC::Char*) -> Nil
   fun set_on_webview_message(cb : CrystalMessageCallback)
 
   fun webview_initialize(
@@ -114,12 +114,13 @@ module Cocoawebview
       end
 
       @@instances[@webview_ptr] = self
-      # Pass a "static" Proc (no closure)
-      Native.set_on_webview_message ->(c_str : LibC::Char*) {
-        # This block doesn't capture 'self', so C can use it.
-        # We find the instance via the registry.
-        webview = @@instances[@webview_ptr] # Or a specific lookup
-        webview.webview_msg_handler(c_str)
+      Native.set_on_webview_message ->(ptr : Void*, c_str : LibC::Char*) {
+        # Use the pointer provided by C to find the specific Crystal object
+        if webview = @@instances[ptr]?
+          webview.webview_msg_handler(c_str)
+        else
+          puts "Warning: Received message for unknown webview pointer: #{ptr}"
+        end
       }
     end
 
