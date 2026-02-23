@@ -31,6 +31,7 @@ void set_on_launch(CrystalCallback cb) { on_launch_cb = cb; }
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
+    NSLog(@"NSApp will exit....!");
     if (on_terminate_cb) on_terminate_cb();
 }
 
