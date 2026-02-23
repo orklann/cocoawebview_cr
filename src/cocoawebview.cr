@@ -112,12 +112,24 @@ module Cocoawebview
 
       # Pass a non-capturing Proc to C
       Native.set_on_webview_message ->(c_str : LibC::Char*) {
-        # Convert C string to Crystal String
         msg = String.new(c_str)
 
-        # Since the C side is likely global, we need a way to find
-        # the right instance, or just handle it globally for now:
-        puts "Received from JS: #{msg}"
+        puts msg
+
+        data = JSON.parse(msg)
+
+        # 3. Extract values safely
+        # We use .as_s and .as_a to tell Crystal these are Strings and Arrays
+        function_name = data["function"].as_s
+        args = data["args"].as_a
+
+        # 4. Look up the callback in your @bindings Hash
+        if callback = @bindings[function_name]?
+          # Note: In Crystal, you cannot splat (*args) into a Proc call
+          # as easily as Ruby because Proc arguments are typed and fixed.
+          # Usually, you'd pass the JSON::Any array directly to the callback.
+          callback.call(args)
+        end
       }
     end
 
