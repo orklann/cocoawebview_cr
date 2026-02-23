@@ -309,11 +309,6 @@ void nsapp_exit() {
     [[NSApplication sharedApplication] terminate:nil];
 }
 
-int add(int a, int b) {
-    NSLog(@"Calling add!");
-    return a + b;
-}
-
 id webview_initialize(bool debug, int style, bool move_title_buttons, int delta_y, bool hide_title_bar) {
     CocoaWebview *webview = [[CocoaWebview alloc] 
         initWithFrame:NSMakeRect(100, 100, 400, 500) 

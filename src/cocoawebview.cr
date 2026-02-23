@@ -2,7 +2,6 @@ require "json"
 
 @[Link(ldflags: "-framework Cocoa -framework WebKit -framework Foundation #{__DIR__}/../ext/cocoawebview.m")]
 lib Native
-  fun add(a : Int32, b : Int32) : Int32
   fun nsapp_init : Void*
   fun nsapp_run : Void
   fun nsapp_exit : Void
@@ -197,9 +196,5 @@ module Cocoawebview
       # NOTE: TODO later?
       # You might need a C function to release the Objective-C object
     end
-  end
-
-  def self.add(a : Int32, b : Int32)
-    Native.add(a, b)
   end
 end
