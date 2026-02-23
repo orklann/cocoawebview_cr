@@ -32,14 +32,14 @@ module Cocoawebview
     def initialize
       @handle = Native.nsapp_init()
       Native.set_on_launch(app_did_launch)
-      Native.set_on_terminate(app_will_quit)
+      #Native.set_on_terminate(app_will_exit)
     end
 
     def app_did_launch
       puts "Crystal: Application has finished launching!"
     end
 
-    def app_will_quit
+    def app_will_exit
       puts "Crystal: Application is shutting down..."
     end
 
