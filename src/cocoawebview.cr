@@ -18,6 +18,8 @@ lib Native
 
   fun webview_show(ptr : Void*)
   fun webview_eval(ptr : Void*, js : LibC::Char*) : Void
+
+  fun webview_set_size(ptr : Void*, width : Int32, height : Int32) : Void
 end
 
 module Cocoawebview
@@ -94,6 +96,10 @@ module Cocoawebview
 
     def eval(code : String)
       Native.webview_eval(@webview_ptr, code.to_unsafe)
+    end
+
+    def set_size(width : Int32, height : Int32)
+      Native.webview_set_size(@webview_ptr, width, height)
     end
 
     def finalize

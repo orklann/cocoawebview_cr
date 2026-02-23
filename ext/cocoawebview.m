@@ -322,3 +322,13 @@ void webview_eval(void *webview_ptr, const char *js_code) {
     
     [webview eval:ns_js];
 }
+
+void webview_set_size(void *webview_ptr, int width, int height) {
+    CocoaWebview *webview = (__bridge CocoaWebview *)webview_ptr;
+    
+    NSRect frame = [webview frame];
+    frame.size.width = (CGFloat)width;
+    frame.size.height = (CGFloat)height;
+    
+    [webview setFrame:frame display:YES];
+}
