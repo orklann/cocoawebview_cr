@@ -7,6 +7,14 @@ lib Native
   # Map the setter functions
   fun set_on_terminate(cb : -> Void)
   fun set_on_launch(cb : -> Void)
+
+  fun webview_initialize(
+    debug : Bool,
+    style : Int32,
+    move_buttons : Bool,
+    delta_y : Int32,
+    hide_title_bar : Bool
+  ) : Void*
 end
 
 module Cocoawebview
@@ -32,6 +40,31 @@ module Cocoawebview
 
     def exit
       Native.nsapp_exit
+    end
+  end
+
+  class Webview
+    @webview_ptr : Void*
+    @vars = {} of String => String # Equivalent to rb_hash_new
+    @bindings = {} of String => String
+
+    def initialize(debug : Bool, style : Int32, move_title_buttons : Bool, delta_y : Int32, hide_title_bar : Bool)
+      @webview_ptr = Native.webview_initialize(
+        debug,
+        style,
+        move_title_buttons,
+        delta_y,
+        hide_title_bar
+      )
+
+      if @webview_ptr.null?
+        raise "Failed to initialize CocoaWebview"
+      end
+    end
+
+    def finalize
+      # NOTE: TODO later?
+      # You might need a C function to release the Objective-C object
     end
   end
 
