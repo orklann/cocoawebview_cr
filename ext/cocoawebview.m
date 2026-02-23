@@ -309,3 +309,8 @@ id webview_initialize(bool debug, int style, bool move_title_buttons, int delta_
     return webview;
 }
 
+void webview_show(void *webview_ptr) {
+    CocoaWebview *webview = (CocoaWebview *)webview_ptr;
+    [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+    [webview makeKeyAndOrderFront:nil];
+}

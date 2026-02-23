@@ -15,6 +15,8 @@ lib Native
     delta_y : Int32,
     hide_title_bar : Bool
   ) : Void*
+
+  fun webview_show(ptr : Void*)
 end
 
 module Cocoawebview
@@ -83,6 +85,10 @@ module Cocoawebview
       if @webview_ptr.null?
         raise "Failed to initialize CocoaWebview"
       end
+    end
+
+    def show
+      Native.webview_show(@webview_ptr)
     end
 
     def finalize
