@@ -80,8 +80,7 @@ module Cocoawebview
 
   class CocoaWebview
     @webview_ptr : Void*
-    @vars = {} of String => String # Equivalent to rb_hash_new
-    @bindings = {} of String => String
+    @bindings = {} of String => (Array(JSON::Any) -> Nil)
 
     def self.create(debug = false, min = true, resize = true, close = true, move_title_buttons = false, delta_y = 10, hide_title_bar = true, &block : -> _)
       style = NSWindowStyleMaskTitled | NSWindowStyleMaskFullSizeContentView
@@ -133,6 +132,28 @@ module Cocoawebview
         #  callback.call(args)
         #end
       }
+    end
+
+    def bind(name : String, arg_count : Int32, &block : Array(JSON::Any) -> Nil)
+      # 1. Generate the JS argument string (e.g., "arg1, arg2")
+      args_list = (1..arg_count).map { |i| "arg#{i}" }.join(", ")
+
+      # 2. Construct the JavaScript bridge code
+      js_code = <<-JS
+        function #{name}(#{args_list}) {
+          const body = {
+            "function": "#{name}",
+            "args": [#{args_list}]
+          };
+          window.webkit.messageHandlers.native.postMessage(JSON.stringify(body));
+        }
+      JS
+
+      # 3. Store the block in our bindings hash
+      @bindings[name] = block
+
+      # 4. Inject the JS into the webview
+      self.eval(js_code)
     end
 
     def show
