@@ -16,6 +16,11 @@ static CrystalCallback on_launch_cb = NULL;
 void set_on_terminate(CrystalCallback cb) { on_terminate_cb = cb; }
 void set_on_launch(CrystalCallback cb) { on_launch_cb = cb; }
 
+typedef struct {
+    int width;
+    int height;
+} SimpleSize;
+
 @interface AppDelegate : NSObject <NSApplicationDelegate> {
 
 }
@@ -331,4 +336,14 @@ void webview_set_size(void *webview_ptr, int width, int height) {
     frame.size.height = (CGFloat)height;
     
     [webview setFrame:frame display:YES];
+}
+
+SimpleSize native_get_size(void *webview_ptr) {
+    NSView *webview = (__bridge NSView *)webview_ptr;
+    NSRect frame = [webview frame];
+    
+    SimpleSize s;
+    s.width = (int)frame.size.width;
+    s.height = (int)frame.size.height;
+    return s;
 }

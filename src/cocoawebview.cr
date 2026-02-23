@@ -20,6 +20,13 @@ lib Native
   fun webview_eval(ptr : Void*, js : LibC::Char*) : Void
 
   fun webview_set_size(ptr : Void*, width : Int32, height : Int32) : Void
+
+  struct SimpleSize
+    width : Int32
+    height : Int32
+  end
+
+  fun webview_get_size(ptr : Void*) : SimpleSize
 end
 
 module Cocoawebview
@@ -100,6 +107,10 @@ module Cocoawebview
 
     def set_size(width : Int32, height : Int32)
       Native.webview_set_size(@webview_ptr, width, height)
+    end
+
+    def get_size
+      Native.webview_get_size(@webview_ptr)
     end
 
     def finalize
