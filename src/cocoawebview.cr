@@ -109,8 +109,9 @@ module Cocoawebview
       Native.webview_set_size(@webview_ptr, width, height)
     end
 
-    def get_size
-      Native.webview_get_size(@webview_ptr)
+    def get_size : Array(Int32)
+      c_size = Native.webview_get_size(@webview_ptr)
+      [c_size.width, c_size.height]
     end
 
     def finalize
