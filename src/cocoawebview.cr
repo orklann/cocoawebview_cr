@@ -7,7 +7,9 @@ lib Native
   # Map the setter functions
   fun set_on_terminate(cb : -> Void)
   fun set_on_launch(cb : -> Void)
-  fun set_on_webview_message(cb : -> Void)
+
+  alias CrystalMessageCallback = LibC::Char* -> Nil
+  fun set_on_webview_message(cb : CrystalMessageCallback)
 
   fun webview_initialize(
     debug : Bool,
