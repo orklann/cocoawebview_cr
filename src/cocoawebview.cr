@@ -81,6 +81,8 @@ module Cocoawebview
   class CocoaWebview
     @webview_ptr : Void*
     @bindings = {} of String => (Array(JSON::Any) -> Nil)
+    # Store all instances in a hash mapped by their C pointer
+    @@instances = {} of Void* => CocoaWebview
 
     def self.create(debug = false, min = true, resize = true, close = true, move_title_buttons = false, delta_y = 10, hide_title_bar = true, &block : -> _)
       style = NSWindowStyleMaskTitled | NSWindowStyleMaskFullSizeContentView
@@ -111,27 +113,23 @@ module Cocoawebview
         raise "Failed to initialize CocoaWebview"
       end
 
-      # Pass a non-capturing Proc to C
+      @@instances[@webview_ptr] = self
+      # Pass a "static" Proc (no closure)
       Native.set_on_webview_message ->(c_str : LibC::Char*) {
-        msg = String.new(c_str)
-
-        puts msg
-
-        data = JSON.parse(msg)
-
-        # 3. Extract values safely
-        # We use .as_s and .as_a to tell Crystal these are Strings and Arrays
-        function_name = data["function"].as_s
-        args = data["args"].as_a
-
-        # 4. Look up the callback in your @bindings Hash
-        if callback = @bindings[function_name]?
-          # Note: In Crystal, you cannot splat (*args) into a Proc call
-          # as easily as Ruby because Proc arguments are typed and fixed.
-          # Usually, you'd pass the JSON::Any array directly to the callback.
-          callback.call(args)
+        # This block doesn't capture 'self', so C can use it.
+        # We find the instance via the registry.
+        if webview = @@instances.values.first? # Or a specific lookup
+          webview.webview_msg_handler(c_str)
         end
       }
+    end
+
+    # This is the instance method you wanted to use
+    def webview_msg_handler(c_str : LibC::Char*)
+      msg = String.new(c_str)
+      data = JSON.parse(msg)
+      puts msg
+      # ... process @bindings here ...
     end
 
     def bind(name : String, arg_count : Int32, &block : Array(JSON::Any) -> Nil)
