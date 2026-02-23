@@ -338,7 +338,7 @@ void webview_set_size(void *webview_ptr, int width, int height) {
     [webview setFrame:frame display:YES];
 }
 
-SimpleSize native_get_size(void *webview_ptr) {
+SimpleSize webview_get_size(void *webview_ptr) {
     NSView *webview = (__bridge NSView *)webview_ptr;
     NSRect frame = [webview frame];
     
