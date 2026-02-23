@@ -118,30 +118,21 @@ module Cocoawebview
 
         puts msg
 
-        data = JSON.parse(msg)
+        #data = JSON.parse(msg)
 
         # 3. Extract values safely
         # We use .as_s and .as_a to tell Crystal these are Strings and Arrays
-        function_name = data["function"].as_s
-        args = data["args"].as_a
+        #function_name = data["function"].as_s
+        #args = data["args"].as_a
 
         # 4. Look up the callback in your @bindings Hash
-        if callback = @bindings[function_name]?
+        #if callback = @bindings[function_name]?
           # Note: In Crystal, you cannot splat (*args) into a Proc call
           # as easily as Ruby because Proc arguments are typed and fixed.
           # Usually, you'd pass the JSON::Any array directly to the callback.
-          callback.call(args)
-        end
+        #  callback.call(args)
+        #end
       }
-    end
-
-    def webview_msg_handler(msg)
-        puts msg
-        #hash = JSON.parse(msg)
-        #function = hash["function"]
-        #args = hash["args"]
-        #callback = @bindings[function]
-        #callback.call(*args) if callback
     end
 
     def show
