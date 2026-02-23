@@ -375,3 +375,8 @@ void webview_dragging(void *webview_ptr) {
     CocoaWebview *webview = (__bridge CocoaWebview *)webview_ptr;
     [webview dragging];
 }
+
+void webview_center(void *webview_ptr) {
+    CocoaWebview *webview = (__bridge CocoaWebview *)webview_ptr;
+    [webview center];
+}

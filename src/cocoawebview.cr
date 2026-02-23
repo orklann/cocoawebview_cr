@@ -21,6 +21,7 @@ lib Native
   ) : Void*
 
   fun webview_show(ptr : Void*)
+  fun webview_center(ptr : Void*)
   fun webview_eval(ptr : Void*, js : LibC::Char*) : Void
 
   fun webview_set_size(ptr : Void*, width : Int32, height : Int32) : Void
@@ -164,6 +165,10 @@ module Cocoawebview
 
     def show
       Native.webview_show(@webview_ptr)
+    end
+
+    def center
+      Native.webview_center(@webview_ptr)
     end
 
     def eval(code : String)
