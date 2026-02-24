@@ -44,6 +44,9 @@ lib Native
   fun webview_get_pos(ptr : Void*) : SimplePoint
 
   fun webview_dragging(ptr : Void*) : Void
+
+  # NSMenu
+  fun nsmenu_initialize : Void *
 end
 
 module Cocoawebview
@@ -53,6 +56,14 @@ module Cocoawebview
   NSWindowStyleMaskClosable = 2
   NSWindowStyleMaskFullSizeContentView = (1 << 15)
   NSWindowStyleMaskFullScreen = (1 << 14)
+
+  class NSMenu
+    @handle : Void*
+
+    def initialize
+      @handle = Native.nsmenu_initialize()
+    end
+  end
 
   class NSApp
     @handle : Void*

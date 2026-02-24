@@ -30,6 +30,17 @@ typedef struct {
     int y;
 } SimplePoint;
 
+@interface Menu : NSObject {
+    
+}
+
+@property (nonatomic, strong) NSMenu *mainMenu;
+@end
+
+@implementation Menu
+
+@end
+
 @interface AppDelegate : NSObject <NSApplicationDelegate> {
 
 }
@@ -384,4 +395,10 @@ void webview_center(void *webview_ptr) {
 void webview_hide(void *webview_ptr) {
     CocoaWebview *webview = (__bridge CocoaWebview *)webview_ptr;
     [webview orderOut:nil];
+}
+
+Menu* nsmenu_initialize() {
+  Menu *menu = [[Menu alloc] init];
+  menu.mainMenu = [NSMenu new];
+  return menu;
 }
