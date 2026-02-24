@@ -56,7 +56,6 @@ typedef struct {
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
-    NSLog(@"NSApp will exit....!");
     if (on_terminate_cb) {
         on_terminate_cb();
     } else {
