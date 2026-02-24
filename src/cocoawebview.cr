@@ -84,7 +84,7 @@ module Cocoawebview
       Native.nsmenu_new_menu()
     end
 
-    def set_menu_item_target(menu_item : Void*, target : Void*)
+    def set_menu_item_target(menu_item : Void*, target : Void*?)
       Native.nsmenu_set_menu_item_target(menu_item, target)
     end
 
