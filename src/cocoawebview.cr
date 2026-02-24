@@ -6,7 +6,7 @@ lib Native
   fun nsapp_run : Void
   fun nsapp_exit : Void
   # Map the setter functions
-  alias CrystalCallback = () -> Nil
+  alias CrystalCallback = -> Nil
   fun set_on_terminate(cb : CrystalCallback)
   fun set_on_launch(cb : CrystalCallback)
 
