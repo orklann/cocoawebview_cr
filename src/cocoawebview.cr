@@ -6,8 +6,9 @@ lib Native
   fun nsapp_run : Void
   fun nsapp_exit : Void
   # Map the setter functions
-  fun set_on_terminate(cb : -> Void)
-  fun set_on_launch(cb : -> Void)
+  alias CrystalCallback = () -> Nil
+  fun set_on_terminate(cb : CrystalCallback)
+  fun set_on_launch(cb : CrystalCallback)
 
   alias CrystalMessageCallback = (Void*, LibC::Char*) -> Nil
   fun set_on_webview_message(cb : CrystalMessageCallback)
