@@ -454,3 +454,7 @@ void nsmenu_show(Menu *menu) {
     [app setActivationPolicy:NSApplicationActivationPolicyRegular];
     [app setMainMenu:menu.mainMenu];
 }
+
+NSMenu *nsmenu_get_main_menu(Menu *menu) {
+    return menu.mainMenu;
+}

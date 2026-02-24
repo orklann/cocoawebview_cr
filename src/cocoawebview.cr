@@ -56,6 +56,7 @@ lib Native
   fun nsmenu_add_item_to_menu(item: Void*, menu : Void*) : Void
   fun nsmenu_set_submenu_to_menu(submenu: Void*, menu: Void*) : Void
   fun nsmenu_show(menu : Void*) : Void
+  fun nsmenu_get_main_menu(menu: Void*) : Void*
 end
 
 module Cocoawebview
@@ -78,6 +79,10 @@ module Cocoawebview
     def create_menu_item_with(title : String, tag : Int32, key : String, &block : Proc(Nil))
       @bindings[tag] = block
       create_menu_item(title, tag, key)
+    end
+
+    def main_menu_bar
+      Native.nsmenu_get_main_menu(@handle)
     end
 
     def new_menu
