@@ -124,8 +124,8 @@ module Cocoawebview
   end
 
   class NSApp
-    @@global_on_launch : Proc(Nil)?
-    @@global_on_terminate : Proc(Nil)?
+    @@global_on_launch : Proc(Nil)
+    @@global_on_terminate : Proc(Nil)
 
     @handle : Void*
     def initialize
