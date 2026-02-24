@@ -455,6 +455,16 @@ void webview_hide(void *webview_ptr) {
     [webview orderOut:nil];
 }
 
+bool webview_is_visible(void *webview_ptr) {
+    CocoaWebview *webview = (__bridge CocoaWebview *)webview_ptr;
+
+    if ([webview isVisible]) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 Menu* nsmenu_initialize() {
   Menu *menu = [[Menu alloc] init];
   menu.mainMenu = [NSMenu new];
