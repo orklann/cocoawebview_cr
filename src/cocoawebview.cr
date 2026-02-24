@@ -68,9 +68,15 @@ module Cocoawebview
 
   class NSMenu
     @handle : Void*
+    @bindings : Hash(Int32, ->())
 
     def initialize
       @handle = Native.nsmenu_initialize()
+    end
+
+    def create_menu_item_with(title : String, tag : Int32, key : String, &block : ->())
+      @bindings[tag] = block
+      create_menu_item(title, tag, key)
     end
 
     def new_menu
