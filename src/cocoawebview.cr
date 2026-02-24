@@ -90,7 +90,7 @@ module Cocoawebview
     end
 
     def status_item_did_clicked(x, y, width, height)
-      puts "Status item clicked: x: #{x}, y: {y}, screen width: #{w}, screen height: #{h}"
+      puts "Status item clicked: x: #{x}, y: #{y}, screen width: #{w}, screen height: #{h}"
     end
   end
 
