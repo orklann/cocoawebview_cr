@@ -125,15 +125,10 @@ module Cocoawebview
 
   class NSApp
     @handle : Void*
-    @@global_on_launch : Proc(Nil) = -> {}
-    @@global_on_terminate : Proc(Nil) = -> {}
 
     def initialize
-      @@global_on_launch = -> { app_did_launch }
-      @@global_on_terminate = -> { app_will_exit }
-
-      Native.set_on_launch(@@global_on_launch)
-      Native.set_on_terminate(@@global_on_terminate)
+      Native.set_on_launch(app_did_launch)
+      Native.set_on_terminate(app_will_exit)
 
       @handle = Native.nsapp_init()
     end
