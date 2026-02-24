@@ -77,7 +77,7 @@ module Cocoawebview
       @bindings = {} of Int32 => Proc(Nil)
     end
 
-    def create_menu_item_with(title : String, tag : Int32, key : String, &block)
+    def create_menu_item_with(title : String, tag : Int32, key : String, &block = nil)
       @bindings[tag] = block if block
       create_menu_item(title, tag, key)
     end
