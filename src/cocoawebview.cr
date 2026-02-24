@@ -68,8 +68,8 @@ module Cocoawebview
   NSWindowStyleMaskFullSizeContentView = (1 << 15)
   NSWindowStyleMaskFullScreen = (1 << 14)
 
-  @@global_on_launch : Proc(Nil)
-  @@global_on_terminate : Proc(Nil)
+  @@global_on_launch : Proc(Nil) = -> {}
+  @@global_on_terminate : Proc(Nil) = -> {}
 
   class NSMenu
     @handle : Void*
