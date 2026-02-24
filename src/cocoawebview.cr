@@ -47,6 +47,15 @@ lib Native
 
   # NSMenu
   fun nsmenu_initialize : Void *
+  fun nsmenu_menu_item_set_target(item: Void*, target: Void*) : Void
+  fun nsmenu_new_menu : Void*
+  fun nsmenu_menu_item_set_action(item: Void*, LibC::Char*) : Void
+  fun nsmenu_new_menu_item : Void*
+  fun nsmenu_new_separator_item : Void*
+  fun nsmenu_create_menu_item(title : LibC::Char*, tag : Int32, key : LibC::Char*) : Void*
+  fun nsmenu_add_item_to_menu(item: Void*, menu : Void*) : Void
+  fun nsmenu_set_submenu_to_menu(submenu: Void*, menu: Void*) : Void
+  fun nsmenu_show(menu : Void*) : Void
 end
 
 module Cocoawebview
@@ -62,6 +71,42 @@ module Cocoawebview
 
     def initialize
       @handle = Native.nsmenu_initialize()
+    end
+
+    def new_menu
+      Native.nsmenu_new_menu()
+    end
+
+    def set_menu_item_target(menu_item : Void*, target : Void*)
+      Native.nsmenu_set_menu_item_target(menu_item, target)
+    end
+
+    def set_menu_item_action(menu_item : Void*, action : String)
+      Native.nsmenu_menu_item_set_action(menu_item, action)
+    end
+
+    def new_menu_item
+      Native.nsmenu_new_menu_item()
+    end
+
+    def new_separator
+      Native.nsmenu_new_separator_item()
+    end
+
+    def create_menu_item(title: String, tag : Int32, key : String)
+      Native.nsmenu_create_menu_item(title, tag, key)
+    end
+
+    def add_item_to_menu(item : Void*, menu : Void*)
+      Native.nsmenu_add_item_to_menu(item, menu)
+    end
+
+    def set_submenu_to_menu(submenu: Void*, menu: Void*)
+      Native.nsmenu_set_submenu_to_menu(submenu, menu)
+    end
+
+    def show(menu : Void*)
+      Native.nsmenu_show(menu)
     end
   end
 

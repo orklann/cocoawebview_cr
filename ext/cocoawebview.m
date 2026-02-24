@@ -402,3 +402,55 @@ Menu* nsmenu_initialize() {
   menu.mainMenu = [NSMenu new];
   return menu;
 }
+
+void nsmenu_menu_item_set_target(NSMenuItem *menu_item, id target) {
+    menu_item.target = target;
+}
+
+NSMenu* nsmenu_new_menu() {
+    NSMenu *menu = [NSMenu new];
+    return menu;
+}
+
+void nsmenu_menu_item_set_action(NSMenuItem *menu_item, const char* action) {
+    NSString *action_ns = [[NSString alloc] initWithCString:action encoding:NSUTF8StringEncoding];
+    menu_item.action = NSSelectorFromString(action_ns); 
+}
+
+NSMenuItem* nsmenu_new_menu_item() {
+    NSMenuItem *menuItem = [NSMenuItem new];
+    return menuItem;
+}
+
+NSMenuItem *nsmenu_new_separator_item() {
+    NSMenuItem *menuItem = [NSMenuItem separatorItem];
+    return menuItem;
+}
+
+NSMenuItem *nsmenu_create_menu_item(const char* title, int tag, const char* key) {
+    NSString *title_ns = [[NSString alloc] initWithCString:title encoding:NSUTF8StringEncoding];
+
+    NSString *key_ns = [[NSString alloc] initWithCString:key encoding:NSUTF8StringEncoding];
+
+    NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:title_ns
+                                                          action:@selector(handleMenuAction:) 
+                                                          keyEquivalent:key_ns];
+
+    [menuItem setTag:tag];
+    return menuItem;
+}
+
+void nsmenu_add_item_to_menu(NSMenuItem *item, NSMenu *menu) {
+    [menu addItem:item];
+}
+
+/* NOTE: menu is class NSMenuItem */
+void nsmenu_set_submenu_to_menu(NSMenu *submenu, NSMenuItem *menu) {
+    [menu setSubmenu:submenu];
+}
+
+void nsmenu_show(Menu *menu) {
+    NSApplication *app = [NSApplication sharedApplication];
+    [app setActivationPolicy:NSApplicationActivationPolicyRegular];
+    [app setMainMenu:menu.mainMenu];
+}
