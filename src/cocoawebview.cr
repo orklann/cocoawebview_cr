@@ -130,9 +130,12 @@ module Cocoawebview
       Native.set_on_launch(app_did_launch)
 
       @handle = Native.nsapp_init()
-
+      @@instances[@handle] = self
       Native.set_on_terminate ->() {
-        app_will_exit
+        # Use the pointer provided by C to find the specific Crystal object
+        if app = @@instances.values.first?
+          app.app_will_exit
+        end
       }
     end
 
