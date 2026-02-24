@@ -13,7 +13,7 @@ lib Native
   alias CrystalMessageCallback = (Void*, LibC::Char*) -> Nil
   fun set_on_webview_message(cb : CrystalMessageCallback)
 
-  alias CrystalStatusItemCallback = (x : Int32, y : Int32, w : Int32, h : Int32) -> Nil
+  alias CrystalStatusItemCallback = (Int32, Int32, Int32, Int32) -> Nil
   fun set_on_status_item_click(cb : CrystalStatusItemCallback)
 
   fun webview_initialize(
