@@ -30,6 +30,56 @@ typedef struct {
     int y;
 } SimplePoint;
 
+@interface CocoaStatusItem : NSObject {
+}
+
+@property (strong, nonatomic) NSStatusItem *statusItem;
+
+- (id)initWithImage:(NSString*)imageName;
+@end
+
+@implementation CocoaStatusItem
+
+- (id)initWithImage:(NSString*)imageName {
+    // Create the status item
+    self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
+
+    // Load image from bundle (ensure it's a template image)
+    NSImage *icon = [NSImage imageNamed:imageName];
+    icon.template = YES; // Important: allows macOS to auto-adapt for dark/light mode
+
+    // Set the icon on the button
+    self.statusItem.button.image = icon;
+
+    // Set action and target
+    self.statusItem.button.action = @selector(menuIconClicked:);
+    self.statusItem.button.target = self;
+    return self;
+}
+
+
+- (void)menuIconClicked:(id)sender {
+    NSStatusBarButton *button = self.statusItem.button;
+    if (!button) return;
+
+    // Get window and its frame in screen coordinates
+    NSWindow *buttonWindow = button.window;
+    NSRect frameInScreen = [buttonWindow frame];
+
+    // Get the screen where the icon is located
+    NSScreen *screen = [buttonWindow screen];
+    NSRect screenRect = [screen frame];
+
+    int x = frameInScreen.origin.x;
+    int y = frameInScreen.origin.y;
+    int screen_width = screenRect.size.width;
+    int screen_height = screenRect.size.height;
+
+    /*rb_funcall(obj, rb_intern("status_item_did_clicked"), 4, x, y, screen_width, screen_height);
+    */
+}
+@end
+
 @interface Menu : NSObject {
     
 }
@@ -460,4 +510,10 @@ void nsmenu_show(Menu *menu) {
 
 NSMenu *nsmenu_get_main_menu(Menu *menu) {
     return menu.mainMenu;
+}
+
+CocoaStatusItem *statusitem_initialize(const char* image_name) {
+    NSString *ns_image_name = [[NSString alloc] initWithCString:image_name encoding:NSUTF8StringEncoding];
+    CocoaStatusItem *statusItem = [[CocoaStatusItem alloc] initWithImage:ns_image_name];
+    return statusItem;
 }

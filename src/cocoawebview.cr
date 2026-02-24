@@ -58,6 +58,9 @@ lib Native
   fun nsmenu_set_submenu_to_menu(submenu: Void*, menu: Void*) : Void
   fun nsmenu_show(menu : Void*) : Void
   fun nsmenu_get_main_menu(menu: Void*) : Void*
+
+  # CocoaStatusItem
+  fun statusitem_initialize(image_name : LibC::Char*) : Void*
 end
 
 module Cocoawebview
@@ -67,6 +70,13 @@ module Cocoawebview
   NSWindowStyleMaskClosable = 2
   NSWindowStyleMaskFullSizeContentView = (1 << 15)
   NSWindowStyleMaskFullScreen = (1 << 14)
+
+  class CocoaStatusItem
+    @handle : Void*
+    def initialize(image_name : String)
+      @handle = Native.statusitem_initialize(image_name)
+    end
+  end
 
   class NSMenu
     @handle : Void*
