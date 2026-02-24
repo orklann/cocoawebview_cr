@@ -101,7 +101,7 @@ module Cocoawebview
       Native.nsmenu_add_item_to_menu(item, menu)
     end
 
-    def set_submenu_to_menu(submenu: Void*, menu: Void*)
+    def set_submenu_to_menu(submenu : Void*, menu : Void*)
       Native.nsmenu_set_submenu_to_menu(submenu, menu)
     end
 
