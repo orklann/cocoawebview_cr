@@ -125,7 +125,7 @@ module Cocoawebview
 
   class NSApp
     @handle : Void*
-
+    @@instances = {} of Void* => NSApp
     def initialize
       Native.set_on_launch(app_did_launch)
 
