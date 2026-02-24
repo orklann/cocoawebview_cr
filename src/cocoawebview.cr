@@ -47,9 +47,9 @@ lib Native
 
   # NSMenu
   fun nsmenu_initialize : Void *
-  fun nsmenu_menu_item_set_target(item: Void*, target: Void*) : Void
+  fun nsmenu_menu_item_set_target(item: Void*, target : Void*) : Void
   fun nsmenu_new_menu : Void*
-  fun nsmenu_menu_item_set_action(item: Void*, LibC::Char*) : Void
+  fun nsmenu_menu_item_set_action(item: Void*, action : LibC::Char*) : Void
   fun nsmenu_new_menu_item : Void*
   fun nsmenu_new_separator_item : Void*
   fun nsmenu_create_menu_item(title : LibC::Char*, tag : Int32, key : LibC::Char*) : Void*
