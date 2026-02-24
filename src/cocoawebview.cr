@@ -93,7 +93,7 @@ module Cocoawebview
       Native.nsmenu_new_separator_item()
     end
 
-    def create_menu_item(title: String, tag : Int32, key : String)
+    def create_menu_item(title : String, tag : Int32, key : String)
       Native.nsmenu_create_menu_item(title, tag, key)
     end
 
