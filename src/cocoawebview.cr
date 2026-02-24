@@ -13,6 +13,9 @@ lib Native
   alias CrystalMessageCallback = (Void*, LibC::Char*) -> Nil
   fun set_on_webview_message(cb : CrystalMessageCallback)
 
+  alias CrystalStatusItemCallback = (x : Int32, y : Int32, w : Int32, h : Int32) -> Nil
+  fun set_on_status_item_click(cb : CrystalStatusItemCallback)
+
   fun webview_initialize(
     debug : Bool,
     style : Int32,
@@ -72,9 +75,22 @@ module Cocoawebview
   NSWindowStyleMaskFullScreen = (1 << 14)
 
   class CocoaStatusItem
+    @@instances = {} of Void* => CocoaStatusItem
     @handle : Void*
+
     def initialize(image_name : String)
       @handle = Native.statusitem_initialize(image_name)
+      @@instances[@handle] = self
+
+      Native.set_on_status_item_click ->(x : Int32, y : Int32, w : Int32, h : Int32) {
+        if status = @@instances.values.first?
+          status.status_item_did_clicked(x, y, w, h)
+        end
+      }
+    end
+
+    def status_item_did_clicked(x, y, width, height)
+      puts "Status item clicked: x: #{x}, y: {y}, screen width: #{w}, screen height: #{h}"
     end
   end
 

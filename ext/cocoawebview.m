@@ -10,15 +10,19 @@ typedef void (*CrystalCallback)();
 
 typedef void (*CrystalMessageCallback)(void* webview_ptr, const char* msg);
 
+typedef void (*CrystalStatusItemCallback)(int x, int y, int screen_width, int screen_height);
+
 // Global variables to hold the Crystal callbacks
 static CrystalCallback on_terminate_cb = NULL;
 static CrystalCallback on_launch_cb = NULL;
 static CrystalMessageCallback on_webview_message_cb = NULL;
+static CrystalStatusItemCallback on_status_item_clicked_cb = NULL;
 
 // Setter functions that Crystal will call to "register" the callbacks
 void set_on_terminate(CrystalCallback cb) { on_terminate_cb = cb; }
 void set_on_launch(CrystalCallback cb) { on_launch_cb = cb; }
 void set_on_webview_message(CrystalMessageCallback cb) { on_webview_message_cb = cb; }
+void set_on_status_item_click(CrystalStatusItemCallback cb) { on_status_item_clicked_cb = cb; }
 
 typedef struct {
     int width;
@@ -75,8 +79,9 @@ typedef struct {
     int screen_width = screenRect.size.width;
     int screen_height = screenRect.size.height;
 
-    /*rb_funcall(obj, rb_intern("status_item_did_clicked"), 4, x, y, screen_width, screen_height);
-    */
+    if (on_status_item_clicked_cb) {
+        on_status_item_clicked_cb(x, y, screen_width, screen_height);
+    }
 }
 @end
 
