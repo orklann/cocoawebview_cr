@@ -5,6 +5,8 @@ lib Native
   fun nsapp_init : Void*
   fun nsapp_run : Void
   fun nsapp_exit : Void
+  fun nsapp_get_app_icon(path : LibC::Char*) : LibC::Char*
+
   # Map the setter functions
   alias CrystalCallback = -> Nil
   fun set_on_terminate(cb : CrystalCallback)
@@ -153,6 +155,7 @@ module Cocoawebview
   class NSApp
     @handle : Void*
     @@instances = {} of Void* => NSApp
+
     def initialize
 
       @handle = Native.nsapp_init()
@@ -169,6 +172,10 @@ module Cocoawebview
           app.app_did_launch
         end
       }
+    end
+
+    def get_app_icon(path : String)
+      Native.nsapp_get_app_icon(path)
     end
 
     def app_did_launch
