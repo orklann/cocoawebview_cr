@@ -399,10 +399,8 @@ char* nsapp_get_app_icon(const char* app_path) {
 
     // 3. Encode to Base64 string
     NSString *base64 = [pngData base64EncodedStringWithOptions:0];
-    const char *utf8 = [base64 UTF8String];
-    if (!utf8) return NULL;
 
-    return (char*)utf8;
+    return strdup([base64 UTF8String]);
 }
 
 

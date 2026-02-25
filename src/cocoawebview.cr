@@ -174,8 +174,17 @@ module Cocoawebview
       }
     end
 
-    def get_app_icon(path : String)
-      Native.nsapp_get_app_icon(path)
+    def get_app_icon(path : String) : String
+      ptr = Native.nsapp_get_app_icon(path)
+      return nil if ptr.null?
+
+      # 1. Create a Crystal string from the pointer
+      crystal_string = String.new(ptr)
+
+      # 2. Free the C-allocated memory to prevent leaks
+      LibC.free(ptr.as(Void*))
+
+      crystal_string
     end
 
     def app_did_launch
