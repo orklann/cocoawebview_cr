@@ -174,7 +174,7 @@ module Cocoawebview
       }
     end
 
-    def get_app_icon(path : String) : String
+    def get_app_icon(path : String) : String?
       ptr = Native.nsapp_get_app_icon(path)
       return nil if ptr.null?
 
