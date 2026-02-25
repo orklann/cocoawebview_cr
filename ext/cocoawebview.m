@@ -378,6 +378,34 @@ void nsapp_exit() {
     [[NSApplication sharedApplication] terminate:nil];
 }
 
+
+char* nsapp_get_app_icon(const char* app_path) {
+    NSString *app_path_ns = [[NSString alloc] initWithCString:app_path encoding:NSUTF8StringEncoding];
+
+    // 1. Get icon for the app bundle
+    NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:app_path_ns];
+    if (!icon) return NULL;
+
+    // Optional: set desired size
+    [icon setSize:NSMakeSize(256, 256)];
+
+    // 2. Convert NSImage to PNG data
+    NSBitmapImageRep *rep = [[NSBitmapImageRep alloc]
+        initWithData:[icon TIFFRepresentation]];
+
+    NSData *pngData = [rep representationUsingType:NSBitmapImageFileTypePNG
+                                        properties:@{}];
+    if (!pngData) return NULL;
+
+    // 3. Encode to Base64 string
+    NSString *base64 = [pngData base64EncodedStringWithOptions:0];
+    const char *utf8 = [base64 UTF8String];
+    if (!utf8) return NULL;
+
+    return (char*)utf8;
+}
+
+
 id webview_initialize(bool debug, int style, bool move_title_buttons, int delta_y, bool hide_title_bar) {
     CocoaWebview *webview = [[CocoaWebview alloc] 
         initWithFrame:NSMakeRect(100, 100, 400, 500) 
