@@ -14,6 +14,7 @@ typedef void (*CrystalStatusItemCallback)(int x, int y, int screen_width, int sc
 
 // Global variables to hold the Crystal callbacks
 static CrystalCallback on_terminate_cb = NULL;
+static CrystalCallback on_theme_changed_cb = NULL;
 static CrystalCallback on_launch_cb = NULL;
 static CrystalMessageCallback on_webview_message_cb = NULL;
 static CrystalStatusItemCallback on_status_item_clicked_cb = NULL;
@@ -23,6 +24,7 @@ void set_on_terminate(CrystalCallback cb) { on_terminate_cb = cb; }
 void set_on_launch(CrystalCallback cb) { on_launch_cb = cb; }
 void set_on_webview_message(CrystalMessageCallback cb) { on_webview_message_cb = cb; }
 void set_on_status_item_click(CrystalStatusItemCallback cb) { on_status_item_clicked_cb = cb; }
+void set_on_theme_changed(CrystalCallback cb) { on_theme_changed_cb = cb; }
 
 typedef struct {
     int width;
@@ -124,7 +126,26 @@ typedef struct {
     return YES;
 }
 
+// Handle the theme change
+- (void)observeValueForKeyPath:(NSString *)keyPath 
+                      ofObject:(id)object 
+                        change:(NSDictionary<NSKeyValueChangeKey,id> *)change 
+                       context:(void *)context {
+    
+    if ([keyPath isEqualToString:@"effectiveAppearance"]) {
+        if (on_theme_changed_cb) {
+            on_theme_changed_cb();
+        } else {
+            NSLog(@"on_theme_changed_cb is NULL!");
+        }
+    }
+}
+
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
+    [[NSApp self] addObserver:self 
+                   forKeyPath:@"effectiveAppearance" 
+                      options:NSKeyValueObservingOptionNew 
+                      context:nil];
     if (on_launch_cb) on_launch_cb();
 }
 @end

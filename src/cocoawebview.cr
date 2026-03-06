@@ -14,6 +14,7 @@ lib Native
 
   alias CrystalMessageCallback = (Void*, LibC::Char*) -> Nil
   fun set_on_webview_message(cb : CrystalMessageCallback)
+  fun set_on_theme_changed(cb : CrystalCallback)
 
   alias CrystalStatusItemCallback = (Int32, Int32, Int32, Int32) -> Nil
   fun set_on_status_item_click(cb : CrystalStatusItemCallback)
@@ -172,6 +173,12 @@ module Cocoawebview
           app.app_did_launch
         end
       }
+
+      Native.set_on_theme_changed ->() {
+        if app = @@instances.values.first?
+          app.system_theme_changed
+        end
+      }
     end
 
     def get_app_icon(path : String) : String?
@@ -193,6 +200,10 @@ module Cocoawebview
 
     def app_will_exit
       puts "Crystal: Application is shutting down..."
+    end
+
+    def system_theme_changed
+      puts "Crystal: System theme has changed..."
     end
 
     def run
