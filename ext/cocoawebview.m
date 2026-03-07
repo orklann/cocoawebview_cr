@@ -97,7 +97,6 @@ typedef struct {
         NSImage *icon = [[NSImage alloc] initWithData:data];
         if (icon) {
             // Standard macOS menu bar icons are usually 18x18 points
-            [icon setSize:NSMakeSize(18, 18)];
             icon.template = YES; 
             
             // Update the existing button image
