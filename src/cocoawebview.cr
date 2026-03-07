@@ -70,6 +70,7 @@ lib Native
   # CocoaStatusItem
   fun statusitem_initialize(image_name : LibC::Char*) : Void*
   fun statusitem_initialize_base64(image_base64 : LibC::Char*) : Void*
+  fun statusitem_set_icon_base64(status_item : Void*, base64_str : LibC::Char*) : Void
 end
 
 module Cocoawebview
@@ -93,6 +94,10 @@ module Cocoawebview
           status.status_item_did_clicked(x, y, w, h)
         end
       }
+    end
+
+    def set_icon_base64(base64_string : String)
+      Native.statusitem_set_icon_base64(@handle, base64_string.to_unsafe)
     end
 
     # New constructor for loading via Base64 string

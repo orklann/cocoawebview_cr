@@ -43,6 +43,7 @@ typedef struct {
 
 - (id)initWithImage:(NSString*)imageName;
 - (id)initWithImageBase64:(NSString*)base64string;
+- (void)setIconByBase64:(NSString*)base64String;
 @end
 
 @implementation CocoaStatusItem
@@ -87,6 +88,22 @@ typedef struct {
         self.statusItem.button.target = self;
     }
     return self;
+}
+
+- (void)setIconByBase64:(NSString*)base64String {
+    NSData *data = [[NSData alloc] initWithBase64EncodedString:base64String options:NSDataBase64DecodingIgnoreUnknownCharacters];
+    
+    if (data) {
+        NSImage *icon = [[NSImage alloc] initWithData:data];
+        if (icon) {
+            // Standard macOS menu bar icons are usually 18x18 points
+            [icon setSize:NSMakeSize(18, 18)];
+            icon.template = YES; 
+            
+            // Update the existing button image
+            self.statusItem.button.image = icon;
+        }
+    }
 }
 
 - (void)menuIconClicked:(id)sender {
@@ -616,4 +633,11 @@ CocoaStatusItem *statusitem_initialize_base64(const char* base64_str) {
     NSString *ns_base64 = [[NSString alloc] initWithCString:base64_str encoding:NSUTF8StringEncoding];
     CocoaStatusItem *statusItem = [[CocoaStatusItem alloc] initWithImageBase64:ns_base64];
     return statusItem;
+}
+
+void statusitem_set_icon_base64(void *status_item_ptr, const char* base64_str) {
+    CocoaStatusItem *statusItem = (__bridge CocoaStatusItem *)status_item_ptr;
+    NSString *ns_base64 = [NSString stringWithUTF8String:base64_str];
+    
+    [statusItem setIconByBase64:ns_base64];
 }
