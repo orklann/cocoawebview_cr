@@ -42,6 +42,7 @@ typedef struct {
 @property (strong, nonatomic) NSStatusItem *statusItem;
 
 - (id)initWithImage:(NSString*)imageName;
+- (id)initWithImageBase64:(NSString*)base64string;
 @end
 
 @implementation CocoaStatusItem
@@ -63,6 +64,27 @@ typedef struct {
     return self;
 }
 
+- (id)initWithImageBase64:(NSString*)base64string {
+    self = [super init];
+    if (self) {
+        // Create the status item
+        self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
+
+        // Decode Base64 string to NSData
+        NSData *data = [[NSData alloc] initWithBase64EncodedString:base64string options:NSDataBase64DecodingIgnoreUnknownCharacters];
+        
+        if (data) {
+            NSImage *icon = [[NSImage alloc] initWithData:data];
+            icon.template = YES; // Allows macOS to adapt for dark/light mode
+            self.statusItem.button.image = icon;
+        }
+
+        // Set action and target
+        self.statusItem.button.action = @selector(menuIconClicked:);
+        self.statusItem.button.target = self;
+    }
+    return self;
+}
 
 - (void)menuIconClicked:(id)sender {
     NSStatusBarButton *button = self.statusItem.button;
@@ -577,5 +599,11 @@ NSMenu *nsmenu_get_main_menu(Menu *menu) {
 CocoaStatusItem *statusitem_initialize(const char* image_name) {
     NSString *ns_image_name = [[NSString alloc] initWithCString:image_name encoding:NSUTF8StringEncoding];
     CocoaStatusItem *statusItem = [[CocoaStatusItem alloc] initWithImage:ns_image_name];
+    return statusItem;
+}
+
+CocoaStatusItem *statusitem_initialize_base64(const char* base64_str) {
+    NSString *ns_base64 = [[NSString alloc] initWithCString:base64_str encoding:NSUTF8StringEncoding];
+    CocoaStatusItem *statusItem = [[CocoaStatusItem alloc] initWithImageBase64:ns_base64];
     return statusItem;
 }

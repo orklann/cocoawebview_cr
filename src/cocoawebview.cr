@@ -68,6 +68,7 @@ lib Native
 
   # CocoaStatusItem
   fun statusitem_initialize(image_name : LibC::Char*) : Void*
+  fun statusitem_initialize_base64(image_base64 : LibC::Char*) : Void*
 end
 
 module Cocoawebview
@@ -84,6 +85,25 @@ module Cocoawebview
 
     def initialize(image_name : String)
       @handle = Native.statusitem_initialize(image_name)
+      @@instances[@handle] = self
+
+      Native.set_on_status_item_click ->(x : Int32, y : Int32, w : Int32, h : Int32) {
+        if status = @@instances.values.first?
+          status.status_item_did_clicked(x, y, w, h)
+        end
+      }
+    end
+
+    # New constructor for loading via Base64 string
+    def self.from_base64(base64_string : String)
+      instance = allocate
+      instance.initialize_with_base64(base64_string)
+      instance
+    end
+
+    # Helper for the Base64 flow
+    protected def initialize_with_base64(base64_string : String)
+      @handle = Native.statusitem_initialize_base64(base64_string)
       @@instances[@handle] = self
 
       Native.set_on_status_item_click ->(x : Int32, y : Int32, w : Int32, h : Int32) {
