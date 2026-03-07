@@ -449,6 +449,13 @@ char* nsapp_get_app_icon(const char* app_path) {
     return strdup([base64 UTF8String]);
 }
 
+bool nsapp_is_retina() {
+    // We check the main screen's backingScaleFactor. 
+    // 1.0 = Standard, 2.0 = Retina
+    CGFloat scale = [[NSScreen mainScreen] backingScaleFactor];
+    return scale > 1.0;
+}
+
 
 id webview_initialize(bool debug, int style, bool move_title_buttons, int delta_y, bool hide_title_bar) {
     CocoaWebview *webview = [[CocoaWebview alloc] 

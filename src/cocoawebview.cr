@@ -6,6 +6,7 @@ lib Native
   fun nsapp_run : Void
   fun nsapp_exit : Void
   fun nsapp_get_app_icon(path : LibC::Char*) : LibC::Char*
+  fun nsapp_is_retina : Bool
 
   # Map the setter functions
   alias CrystalCallback = -> Nil
@@ -212,6 +213,10 @@ module Cocoawebview
       LibC.free(ptr.as(Void*))
 
       crystal_string
+    end
+
+    def is_retina? : Bool
+      Native.nsapp_is_retina
     end
 
     def app_did_launch
