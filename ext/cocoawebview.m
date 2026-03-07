@@ -76,8 +76,8 @@ typedef struct {
             
             // This is the magic line: 
             // Regardless of how many pixels are in the Base64 data (e.g., 44x44),
-            // we tell macOS to draw it in a 22x22 point space.
-            [icon setSize:NSMakeSize(22, 22)];
+            // we tell macOS to draw it in a 18x18 point space.
+            [icon setSize:NSMakeSize(18, 18)];
             
             icon.template = YES; 
             self.statusItem.button.image = icon;
