@@ -67,19 +67,22 @@ typedef struct {
 - (id)initWithImageBase64:(NSString*)base64string {
     self = [super init];
     if (self) {
-        // Create the status item
         self.statusItem = [[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength];
 
-        // Decode Base64 string to NSData
         NSData *data = [[NSData alloc] initWithBase64EncodedString:base64string options:NSDataBase64DecodingIgnoreUnknownCharacters];
         
         if (data) {
             NSImage *icon = [[NSImage alloc] initWithData:data];
-            icon.template = YES; // Allows macOS to adapt for dark/light mode
+            
+            // This is the magic line: 
+            // Regardless of how many pixels are in the Base64 data (e.g., 44x44),
+            // we tell macOS to draw it in a 22x22 point space.
+            [icon setSize:NSMakeSize(22, 22)];
+            
+            icon.template = YES; 
             self.statusItem.button.image = icon;
         }
 
-        // Set action and target
         self.statusItem.button.action = @selector(menuIconClicked:);
         self.statusItem.button.target = self;
     }
