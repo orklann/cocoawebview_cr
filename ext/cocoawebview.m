@@ -14,9 +14,14 @@ typedef void (*CrystalStatusItemCallback)(int x, int y, int screen_width, int sc
 
 typedef void (*CrystalTimerCallback)(void* timer_ptr);
 
+typedef void (*CrystalFocusCallback)(void* webview_ptr);
+
 static CrystalTimerCallback on_timer_tick_cb = NULL;
 
 void set_on_timer_tick(CrystalTimerCallback cb) { on_timer_tick_cb = cb; }
+
+static CrystalFocusCallback on_window_blur_cb = NULL;
+void set_on_window_blur(CrystalFocusCallback cb) { on_window_blur_cb = cb; }
 
 // Global variables to hold the Crystal callbacks
 static CrystalCallback on_terminate_cb = NULL;
@@ -273,7 +278,7 @@ static TimerBridge *timerBridge = nil;
 }
 @end
 
-@interface CocoaWebview : NSWindow <WKScriptMessageHandler, WKNavigationDelegate> {
+@interface CocoaWebview : NSWindow <WKScriptMessageHandler, WKNavigationDelegate, NSWindowDelegate> {
     CocoaWKWebView *webView;
     BOOL showDevTool;
     BOOL shouldMoveTitleButtons;
@@ -302,6 +307,7 @@ static TimerBridge *timerBridge = nil;
         [self setTitle:@"My Custom Window"];
         [self setDevTool:flag];
         [self setDeltaY:dy];
+        [self setDelegate:self];
         if (hideTitleBar) {
             [self setTitlebarAppearsTransparent: YES];
             [self setTitleVisibility:NSWindowTitleHidden];
@@ -319,6 +325,12 @@ static TimerBridge *timerBridge = nil;
                                                    object:self];
     }
     return self;
+}
+
+- (void)windowDidResignKey:(NSNotification *)notification {
+    if (on_window_blur_cb) {
+        on_window_blur_cb((__bridge void *)self);
+    }
 }
 
 - (void)increaseNormalLevel:(int)delta {

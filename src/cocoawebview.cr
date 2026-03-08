@@ -17,6 +17,9 @@ lib Native
   fun set_on_webview_message(cb : CrystalMessageCallback)
   fun set_on_theme_changed(cb : CrystalCallback)
 
+  alias CrystalFocusCallback = (Void*) -> Nil
+  fun set_on_window_blur(cb : CrystalFocusCallback)
+
   alias CrystalStatusItemCallback = (Int32, Int32, Int32, Int32) -> Nil
   fun set_on_status_item_click(cb : CrystalStatusItemCallback)
 
@@ -285,6 +288,7 @@ module Cocoawebview
     @bindings = {} of String => (Array(JSON::Any) -> Nil)
     # Store all instances in a hash mapped by their C pointer
     @@instances = {} of Void* => CocoaWebview
+    @on_blur : (-> Nil)?
 
     def self.create(debug = false, min = true, resize = true, close = true, move_title_buttons = false, delta_y = 10, hide_title_bar = true, &block : -> _)
       style = NSWindowStyleMaskTitled | NSWindowStyleMaskFullSizeContentView
@@ -324,6 +328,20 @@ module Cocoawebview
           puts "Warning: Received message for unknown webview pointer: #{ptr}"
         end
       }
+
+      Native.set_on_window_blur ->(ptr : Void*) {
+        if webview = @@instances[ptr]?
+          webview.handle_blur
+        }
+      }
+    end
+
+    def on_blur(&block : -> Nil)
+      @on_blur = block
+    end
+
+    protected def handle_blur
+      @on_blur.try &.call
     end
 
     # This is the instance method you wanted to use
