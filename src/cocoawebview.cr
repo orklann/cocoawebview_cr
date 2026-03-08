@@ -332,7 +332,6 @@ module Cocoawebview
       Native.set_on_window_blur ->(ptr : Void*) {
         if webview = @@instances[ptr]?
           webview.handle_blur
-        }
       }
     end
 
