@@ -71,6 +71,13 @@ lib Native
   fun statusitem_initialize(image_name : LibC::Char*) : Void*
   fun statusitem_initialize_base64(image_base64 : LibC::Char*) : Void*
   fun statusitem_set_icon_base64(status_item : Void*, base64_str : LibC::Char*) : Void
+
+  # NSTimer
+  alias CrystalTimerCallback = (Void*) -> Nil
+  fun set_on_timer_tick(cb : CrystalTimerCallback)
+
+  fun nstimer_create(interval : Float64, repeats : Bool) : Void*
+  fun nstimer_invalidate(ptr : Void*)
 end
 
 module Cocoawebview
@@ -80,6 +87,34 @@ module Cocoawebview
   NSWindowStyleMaskClosable = 2
   NSWindowStyleMaskFullSizeContentView = (1 << 15)
   NSWindowStyleMaskFullScreen = (1 << 14)
+
+  class NSTimer
+    @@instances = {} of Void* => NSTimer
+    @handle : Void*
+    @callback : Proc(Nil)
+
+    def initialize(interval : Float64, repeats : Bool = true, &block : -> Nil)
+      @callback = block
+      @handle = Native.nstimer_create(interval, repeats)
+      @@instances[@handle] = self
+
+      # Set the global callback once
+      Native.set_on_timer_tick ->(ptr : Void*) {
+        if timer = @@instances[ptr]?
+          timer.tick
+        end
+      }
+    end
+
+    protected def tick
+      @callback.call
+    end
+
+    def stop
+      Native.nstimer_invalidate(@handle)
+      @@instances.delete(@handle)
+    end
+  end
 
   class CocoaStatusItem
     @@instances = {} of Void* => CocoaStatusItem

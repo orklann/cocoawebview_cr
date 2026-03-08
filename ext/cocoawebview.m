@@ -12,6 +12,12 @@ typedef void (*CrystalMessageCallback)(void* webview_ptr, const char* msg);
 
 typedef void (*CrystalStatusItemCallback)(int x, int y, int screen_width, int screen_height);
 
+typedef void (*CrystalTimerCallback)(void* timer_ptr);
+
+static CrystalTimerCallback on_timer_tick_cb = NULL;
+
+void set_on_timer_tick(CrystalTimerCallback cb) { on_timer_tick_cb = cb; }
+
 // Global variables to hold the Crystal callbacks
 static CrystalCallback on_terminate_cb = NULL;
 static CrystalCallback on_theme_changed_cb = NULL;
@@ -35,6 +41,22 @@ typedef struct {
     int x;
     int y;
 } SimplePoint;
+
+// Implement the Bridge Class to handle the NSTimer selector
+@interface TimerBridge : NSObject
+- (void)timerFired:(NSTimer *)timer;
+@end
+
+@implementation TimerBridge
+- (void)timerFired:(NSTimer *)timer {
+    if (on_timer_tick_cb) {
+        // Pass the timer pointer back so Crystal knows which timer fired
+        on_timer_tick_cb((__bridge void *)timer);
+    }
+}
+@end
+
+static TimerBridge *timerBridge = nil;
 
 @interface CocoaStatusItem : NSObject {
 }
@@ -639,4 +661,22 @@ void statusitem_set_icon_base64(void *status_item_ptr, const char* base64_str) {
     NSString *ns_base64 = [NSString stringWithUTF8String:base64_str];
     
     [statusItem setIconByBase64:ns_base64];
+}
+
+void* nstimer_create(double interval, bool repeats) {
+    if (!timerBridge) timerBridge = [[TimerBridge alloc] init];
+    
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:interval
+                                                      target:timerBridge
+                                                    selector:@selector(timerFired:)
+                                                    userInfo:nil
+                                                     repeats:repeats];
+    // Keep it alive in the current run loop
+    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+    return (__bridge void *)timer;
+}
+
+void nstimer_invalidate(void* timer_ptr) {
+    NSTimer *timer = (__bridge NSTimer *)timer_ptr;
+    [timer invalidate];
 }
