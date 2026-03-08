@@ -101,11 +101,28 @@ static TimerBridge *timerBridge = nil;
         
         if (data) {
             NSImage *icon = [[NSImage alloc] initWithData:data];
-            
-            // This is the magic line: 
-            // Regardless of how many pixels are in the Base64 data (e.g., 44x44),
-            // we tell macOS to draw it in a 18x18 point space.
-            // [icon setSize:NSMakeSize(18, 18)];
+
+            NSImageRep *rep = [[icon representations] firstObject];
+            if (rep) {
+
+                // 1. Get the actual physical pixel dimensions
+                CGFloat pixelWidth = (CGFloat)[rep pixelsWide];
+                CGFloat pixelHeight = (CGFloat)[rep pixelsHigh];
+
+                // 2. Get the scale factor of the main screen (or the button's screen)
+                // 2.0 for Retina, 1.0 for Standard
+                CGFloat scale = 1.0;
+                if (self.statusItem.button.window.screen) {
+                    scale = self.statusItem.button.window.screen.backingScaleFactor;
+                } else {
+                    scale = [[NSScreen mainScreen] backingScaleFactor];
+                }
+
+                // 3. Set the logical point size based on the screen's density
+                // If pixels=44 and scale=2.0, size=22pt (Correct Retina)
+                // If pixels=22 and scale=1.0, size=22pt (Correct Standard)
+                [icon setSize:NSMakeSize(pixelWidth / scale, pixelHeight / scale)];
+            }
             
             icon.template = YES; 
             self.statusItem.button.image = icon;
@@ -123,6 +140,27 @@ static TimerBridge *timerBridge = nil;
     if (data) {
         NSImage *icon = [[NSImage alloc] initWithData:data];
         if (icon) {
+            NSImageRep *rep = [[icon representations] firstObject];
+            if (rep) {
+                // 1. Get the actual physical pixel dimensions
+                CGFloat pixelWidth = (CGFloat)[rep pixelsWide];
+                CGFloat pixelHeight = (CGFloat)[rep pixelsHigh];
+
+                // 2. Get the scale factor of the main screen (or the button's screen)
+                // 2.0 for Retina, 1.0 for Standard
+                CGFloat scale = 1.0;
+                if (self.statusItem.button.window.screen) {
+                    scale = self.statusItem.button.window.screen.backingScaleFactor;
+                } else {
+                    scale = [[NSScreen mainScreen] backingScaleFactor];
+                }
+
+                // 3. Set the logical point size based on the screen's density
+                // If pixels=44 and scale=2.0, size=22pt (Correct Retina)
+                // If pixels=22 and scale=1.0, size=22pt (Correct Standard)
+                [icon setSize:NSMakeSize(pixelWidth / scale, pixelHeight / scale)];
+            }
+
             // Standard macOS menu bar icons are usually 18x18 points
             icon.template = NO; 
             
