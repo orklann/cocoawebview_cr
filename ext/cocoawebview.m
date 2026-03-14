@@ -544,6 +544,11 @@ bool nsapp_is_retina() {
     return scale > 1.0;
 }
 
+const char* nsapp_get_bundle_path() {
+    NSString *path = [[NSBundle mainBundle] resourcePath];
+    if (!path) return NULL;
+    return strdup([path UTF8String]);
+}
 
 id webview_initialize(bool debug, int style, bool move_title_buttons, int delta_y, bool hide_title_bar) {
     CocoaWebview *webview = [[CocoaWebview alloc] 

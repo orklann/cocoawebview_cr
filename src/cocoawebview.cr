@@ -7,6 +7,7 @@ lib Native
   fun nsapp_exit : Void
   fun nsapp_get_app_icon(path : LibC::Char*) : LibC::Char*
   fun nsapp_is_retina : Bool
+  fun nsapp_get_bundle_path : LibC::Char*
 
   # Map the setter functions
   alias CrystalCallback = -> Nil
@@ -255,6 +256,15 @@ module Cocoawebview
       # 2. Free the C-allocated memory to prevent leaks
       LibC.free(ptr.as(Void*))
 
+      crystal_string
+    end
+
+    def get_bundle_path : String?
+      ptr = Native.nsapp_get_bundle_path
+      return nil if ptr.null?
+
+      crystal_string = String.new(ptr)
+      LibC.free(ptr.as(Void*))
       crystal_string
     end
 
