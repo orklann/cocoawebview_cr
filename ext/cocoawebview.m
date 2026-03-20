@@ -395,7 +395,7 @@ static TimerBridge *timerBridge = nil;
 }
 
 - (void)moveWindowButtonsForWindow:(NSWindow *)window {
-    NSLog(@"move window buttons!");
+    return ;
     //Close Button
     NSButton *closeButton = [window standardWindowButton:NSWindowCloseButton];
     [closeButton setFrameOrigin:NSMakePoint(closeButton.frame.origin.x + 10, closeButton.frame.origin.y - deltaY)];
