@@ -165,15 +165,15 @@ module Cocoawebview
 
   class NSMenu
     @handle : Void*
-    @bindings : Hash(Int32, Proc(Nil))
+    @@bindings : Hash(Int32, Proc(Nil))
 
     def initialize
       @handle = Native.nsmenu_initialize()
-      @bindings = {} of Int32 => Proc(Nil)
+      @@bindings = {} of Int32 => Proc(Nil)
     end
 
     def create_menu_item_with(title : String, tag : Int32, key : String, &block)
-      @bindings[tag] = block if block
+      @@bindings[tag] = block if block
       create_menu_item(title, tag, key)
     end
 
