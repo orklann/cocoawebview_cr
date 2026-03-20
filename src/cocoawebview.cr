@@ -255,6 +255,8 @@ module Cocoawebview
     end
 
     def menu_item_clicked(tag : Int32)
+      func = NSMenu.bindings[tag]
+      puts func
       puts tag
     end
 
