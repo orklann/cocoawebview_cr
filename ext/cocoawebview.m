@@ -360,12 +360,13 @@ static TimerBridge *timerBridge = nil;
         [self addWebViewToWindow:self];
         [self setShouldMoveTitleButtons:moveTitleButtons];
         if (moveTitleButtons) {
-            //[self moveWindowButtonsForWindow:self];
+            [self moveWindowButtonsForWindow:self];
         }
-        [[NSNotificationCenter defaultCenter] addObserver:self
+        /*[[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(windowDidResize:)
                                                      name:NSWindowDidResizeNotification
                                                    object:self];
+        */
     }
     return self;
 }
@@ -392,7 +393,6 @@ static TimerBridge *timerBridge = nil;
     if (shouldMoveTitleButtons) {
         [self moveWindowButtonsForWindow:self];
         NSLog(@"resize!");
-        shouldMoveTitleButtons = NO;
     }
 }
 
