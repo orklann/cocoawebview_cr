@@ -24,6 +24,9 @@ lib Native
   alias CrystalStatusItemCallback = (Int32, Int32, Int32, Int32) -> Nil
   fun set_on_status_item_click(cb : CrystalStatusItemCallback)
 
+  alias CrystalMenuItemCallback = (Int32) -> Nil
+  fun set_on_menu_item_clicked(cb : CrystalMenuItemCallback)
+
   fun webview_initialize(
     debug : Bool,
     style : Int32,
@@ -243,6 +246,16 @@ module Cocoawebview
           app.system_theme_changed
         end
       }
+
+      Native.set_on_menu_item_clicked ->(tag : Int32) {
+        if app = @@instances.values.first?
+          app.menu_item_clicked(tag)
+        end
+      }
+    end
+
+    def menu_item_clicked(tag : Int32)
+      puts tag
     end
 
     def get_app_icon(path : String) : String?
