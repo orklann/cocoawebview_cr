@@ -168,7 +168,7 @@ module Cocoawebview
 
   class NSMenu
     @handle : Void*
-    @@bindings = {} of Int32 => Proc(Nil)
+    class_getter bindings = {} of Int32 => Proc(Nil)
 
     def initialize
       @handle = Native.nsmenu_initialize()
