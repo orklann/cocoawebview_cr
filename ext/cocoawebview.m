@@ -387,7 +387,8 @@ static TimerBridge *timerBridge = nil;
 - (void)windowDidResize:(NSNotification *)notification {
     if (shouldMoveTitleButtons) {
         // NOTE: It seems no need to move buttons while resizing
-        //[self moveWindowButtonsForWindow:self];
+        [self moveWindowButtonsForWindow:self];
+        shouldMoveTitleButtons = NO;
     }
 }
 
