@@ -12,6 +12,7 @@ typedef void (*CrystalMessageCallback)(void* webview_ptr, const char* msg);
 
 typedef void (*CrystalStatusItemCallback)(int x, int y, int screen_width, int screen_height);
 
+typedef void (*CrystalMenuItemCallback)(int tag);
 typedef void (*CrystalTimerCallback)(void* timer_ptr);
 
 typedef void (*CrystalFocusCallback)(void* webview_ptr);
@@ -29,6 +30,7 @@ static CrystalCallback on_theme_changed_cb = NULL;
 static CrystalCallback on_launch_cb = NULL;
 static CrystalMessageCallback on_webview_message_cb = NULL;
 static CrystalStatusItemCallback on_status_item_clicked_cb = NULL;
+static CrystalMenuItemCallback on_menu_item_clicked_cb = NULL;
 
 // Setter functions that Crystal will call to "register" the callbacks
 void set_on_terminate(CrystalCallback cb) { on_terminate_cb = cb; }
@@ -36,6 +38,8 @@ void set_on_launch(CrystalCallback cb) { on_launch_cb = cb; }
 void set_on_webview_message(CrystalMessageCallback cb) { on_webview_message_cb = cb; }
 void set_on_status_item_click(CrystalStatusItemCallback cb) { on_status_item_clicked_cb = cb; }
 void set_on_theme_changed(CrystalCallback cb) { on_theme_changed_cb = cb; }
+void set_on_menu_item_clicked(CrystalMenuItemCallback cb) { on_menu_item_clicked_cb = cb; }
+
 
 typedef struct {
     int width;
@@ -214,8 +218,9 @@ static TimerBridge *timerBridge = nil;
 - (void)handleMenuAction:(id)sender {
     NSMenuItem *item = (NSMenuItem *)sender;
     NSInteger tag = [item tag];
-    //VALUE rb_tag = INT2NUM(tag);
-    //rb_funcall(rb_menu, rb_intern("handle_menu_action"), 1, rb_tag);
+    if (on_menu_item_clicked_cb) {
+        on_menu_item_clicked_cb(tag);
+    }
 }
 
 - (void)applicationWillTerminate:(NSNotification *)notification {
