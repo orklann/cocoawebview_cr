@@ -350,6 +350,7 @@ static TimerBridge *timerBridge = nil;
         [self setTitle:@"My Custom Window"];
         [self setDevTool:flag];
         [self setDeltaY:dy];
+        NSLog(@"delta_y: %d", deltaY);
         [self setDelegate:self];
         if (hideTitleBar) {
             [self setTitlebarAppearsTransparent: YES];
