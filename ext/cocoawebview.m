@@ -360,7 +360,7 @@ static TimerBridge *timerBridge = nil;
         [self addWebViewToWindow:self];
         [self setShouldMoveTitleButtons:moveTitleButtons];
         if (moveTitleButtons) {
-            [self moveWindowButtonsForWindow:self];
+            //[self moveWindowButtonsForWindow:self];
         }
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(windowDidResize:)
