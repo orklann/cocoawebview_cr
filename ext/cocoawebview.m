@@ -391,11 +391,13 @@ static TimerBridge *timerBridge = nil;
 - (void)windowDidResize:(NSNotification *)notification {
     if (shouldMoveTitleButtons) {
         [self moveWindowButtonsForWindow:self];
+        NSLog(@"resize!");
+        shouldMoveTitleButtons = NO;
     }
 }
 
 - (void)moveWindowButtonsForWindow:(NSWindow *)window {
-    return ;
+    NSLog(@"move buttons!");
     //Close Button
     NSButton *closeButton = [window standardWindowButton:NSWindowCloseButton];
     [closeButton setFrameOrigin:NSMakePoint(closeButton.frame.origin.x + 10, closeButton.frame.origin.y - deltaY)];
