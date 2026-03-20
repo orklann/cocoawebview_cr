@@ -341,9 +341,6 @@ static TimerBridge *timerBridge = nil;
 
 @implementation CocoaWebview
 - (id)initWithFrame:(NSRect)frame debug:(BOOL)flag style:(int)style moveTitleButtons:(BOOL)moveTitleButtons deltaY:(int)dy  hideTitleBar:(BOOL)hideTitleBar{
-    if (hideTitleBar) {
-        style |= NSWindowStyleMaskFullSizeContentView;
-    }
     self = [super initWithContentRect:frame
                             styleMask:style
                               backing:NSBackingStoreBuffered
@@ -394,6 +391,7 @@ static TimerBridge *timerBridge = nil;
 - (void)windowDidResize:(NSNotification *)notification {
     if (shouldMoveTitleButtons) {
         [self moveWindowButtonsForWindow:self];
+        shouldMoveTitleButtons = NO;
     }
 }
 
