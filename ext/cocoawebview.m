@@ -395,17 +395,18 @@ static TimerBridge *timerBridge = nil;
 }
 
 - (void)moveWindowButtonsForWindow:(NSWindow *)window {
+    NSLog(@"move window buttons!");
     //Close Button
     NSButton *closeButton = [window standardWindowButton:NSWindowCloseButton];
-    [closeButton setFrameOrigin:NSMakePoint(closeButton.frame.origin.x, closeButton.frame.origin.y - deltaY)];
+    [closeButton setFrameOrigin:NSMakePoint(closeButton.frame.origin.x + 10, closeButton.frame.origin.y - deltaY)];
 
     //Minimize Button
     NSButton *minimizeButton = [window standardWindowButton:NSWindowMiniaturizeButton];
-    [minimizeButton setFrameOrigin:NSMakePoint(minimizeButton.frame.origin.x, minimizeButton.frame.origin.y - deltaY)];
+    [minimizeButton setFrameOrigin:NSMakePoint(minimizeButton.frame.origin.x + 10, minimizeButton.frame.origin.y - deltaY)];
 
     //Zoom Button
     NSButton *zoomButton = [window standardWindowButton:NSWindowZoomButton];
-    [zoomButton setFrameOrigin:NSMakePoint(zoomButton.frame.origin.x, zoomButton.frame.origin.y - deltaY)];
+    [zoomButton setFrameOrigin:NSMakePoint(zoomButton.frame.origin.x + 10, zoomButton.frame.origin.y - deltaY)];
 }
 
 - (void)close {
