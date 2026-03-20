@@ -256,8 +256,7 @@ module Cocoawebview
 
     def menu_item_clicked(tag : Int32)
       func = NSMenu.bindings[tag]
-      puts func
-      puts tag
+      func?.try &.call
     end
 
     def get_app_icon(path : String) : String?
