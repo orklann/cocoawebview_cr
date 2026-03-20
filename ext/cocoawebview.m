@@ -341,6 +341,9 @@ static TimerBridge *timerBridge = nil;
 
 @implementation CocoaWebview
 - (id)initWithFrame:(NSRect)frame debug:(BOOL)flag style:(int)style moveTitleButtons:(BOOL)moveTitleButtons deltaY:(int)dy  hideTitleBar:(BOOL)hideTitleBar{
+    if (hideTitleBar) {
+        style |= NSWindowStyleMaskFullSizeContentView;
+    }
     self = [super initWithContentRect:frame
                             styleMask:style
                               backing:NSBackingStoreBuffered
@@ -350,7 +353,6 @@ static TimerBridge *timerBridge = nil;
         [self setTitle:@"My Custom Window"];
         [self setDevTool:flag];
         [self setDeltaY:dy];
-        NSLog(@"delta_y: %d", deltaY);
         [self setDelegate:self];
         if (hideTitleBar) {
             [self setTitlebarAppearsTransparent: YES];
