@@ -576,6 +576,13 @@ void webview_eval(void *webview_ptr, const char *js_code) {
     [webview eval:ns_js];
 }
 
+void webview_navigate(void *webview_ptr, const char *url) {
+    CocoaWebview *webview = (__bridge CocoaWebview *)webview_ptr;
+    NSString *ns_url = [NSString stringWithUTF8String:url];
+    
+    [webview navigate:ns_url];
+}
+
 void webview_set_size(void *webview_ptr, int width, int height) {
     CocoaWebview *webview = (__bridge CocoaWebview *)webview_ptr;
     

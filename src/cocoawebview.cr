@@ -40,6 +40,7 @@ lib Native
   fun webview_hide(ptr : Void*)
   fun webview_is_visible(ptr : Void*) : Bool
   fun webview_eval(ptr : Void*, js : LibC::Char*) : Void
+  fun webview_navigate(ptr : Void*, url : LibC::Char*) : Void
 
   fun webview_set_size(ptr : Void*, width : Int32, height : Int32) : Void
 
@@ -424,6 +425,10 @@ module Cocoawebview
 
     def eval(code : String)
       Native.webview_eval(@webview_ptr, code.to_unsafe)
+    end
+
+    def navigate(url : String)
+      Native.webview_eval(@webview_ptr, url.to_unsafe)
     end
 
     def set_size(width : Int32, height : Int32)
