@@ -428,7 +428,7 @@ module Cocoawebview
     end
 
     def navigate(url : String)
-      Native.webview_eval(@webview_ptr, url.to_unsafe)
+      Native.webview_navigate(@webview_ptr, url.to_unsafe)
     end
 
     def set_size(width : Int32, height : Int32)
