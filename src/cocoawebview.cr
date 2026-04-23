@@ -375,7 +375,6 @@ module Cocoawebview
     end
 
     protected def handle_load_finished
-      puts "hello"
       @on_load_finished.try &.call
     end
 
