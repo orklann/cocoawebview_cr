@@ -27,6 +27,9 @@ lib Native
   alias CrystalMenuItemCallback = (Int32) -> Nil
   fun set_on_menu_item_clicked(cb : CrystalMenuItemCallback)
 
+  alias CrystalNavCallback = (Void*) -> Nil
+  fun set_on_webview_finished_load(cb : CrystalNavCallback)
+
   fun webview_initialize(
     debug : Bool,
     style : Int32,

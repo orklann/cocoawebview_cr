@@ -40,6 +40,12 @@ void set_on_status_item_click(CrystalStatusItemCallback cb) { on_status_item_cli
 void set_on_theme_changed(CrystalCallback cb) { on_theme_changed_cb = cb; }
 void set_on_menu_item_clicked(CrystalMenuItemCallback cb) { on_menu_item_clicked_cb = cb; }
 
+void (*on_webview_finished_load)(void*) = NULL;
+
+void set_on_webview_finished_load(void (*cb)(void*)) {
+    on_webview_finished_load = cb;
+}
+
 
 typedef struct {
     int width;
@@ -493,8 +499,9 @@ static TimerBridge *timerBridge = nil;
 
 // Called when the web view finishes loading
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
-    // TODO: Call crystal callback
-    //rb_funcall(rb_cocoawebview, rb_intern("webview_did_load"), 0);
+    if (on_webview_finished_load != NULL) {
+        on_webview_finished_load((void *)self); 
+    }
 }
 @end
 
