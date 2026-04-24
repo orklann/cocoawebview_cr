@@ -370,7 +370,7 @@ module Cocoawebview
       }
     end
 
-    def on_load_finished(&block : -> Nil)
+    def on_load_finished(&block : CocoaWebview -> Nil)
       @on_load_finished = block
     end
 
