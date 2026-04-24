@@ -318,7 +318,7 @@ module Cocoawebview
     @@instances = {} of Void* => CocoaWebview
     @on_blur : (-> Nil)?
 
-    def self.create(debug = false, min = true, resize = true, close = true, move_title_buttons = false, delta_y = 10, hide_title_bar = true, &block : CocoaWebview -> Nil))
+    def self.create(debug = false, min = true, resize = true, close = true, move_title_buttons = false, delta_y = 10, hide_title_bar = true, &block : CocoaWebview -> Nil)
       style = NSWindowStyleMaskTitled | NSWindowStyleMaskFullSizeContentView
 
       style = style | NSWindowStyleMaskMiniaturizable if min
