@@ -375,7 +375,7 @@ module Cocoawebview
     end
 
     protected def handle_load_finished
-      @on_load_finished.try &.call(@webview_ptr)
+      @on_load_finished.try &.call(self)
     end
 
     def on_blur(&block : -> Nil)
