@@ -312,7 +312,7 @@ module Cocoawebview
 
   class CocoaWebview
     @webview_ptr : Void*
-    @on_load_finished : (-> Nil)? # Store the block
+    @on_load_finished : (CocoaWebview -> Nil)? # Store the block
     @bindings = {} of String => (Array(JSON::Any) -> Nil)
     # Store all instances in a hash mapped by their C pointer
     @@instances = {} of Void* => CocoaWebview
@@ -375,7 +375,7 @@ module Cocoawebview
     end
 
     protected def handle_load_finished
-      @on_load_finished.try &.call
+      @on_load_finished.try &.call(@webview_ptr)
     end
 
     def on_blur(&block : -> Nil)
