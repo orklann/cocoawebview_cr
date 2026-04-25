@@ -46,6 +46,11 @@ void set_on_webview_finished_load(void (*cb)(void*)) {
     on_webview_finished_load = cb;
 }
 
+void (*on_webview_resize)(void*) = NULL;
+
+void set_on_webview_resize(void (*cb)(void*)) {
+    on_webview_resize = cb;
+}
 
 typedef struct {
     int width;
@@ -393,6 +398,10 @@ static TimerBridge *timerBridge = nil;
 - (void)windowDidResize:(NSNotification *)notification {
     if (shouldMoveTitleButtons) {
         [self moveWindowButtonsForWindow:self];
+    }
+
+    if (on_webview_resize != NULL) {
+        on_webview_resize((__bridge void *)self);
     }
 }
 

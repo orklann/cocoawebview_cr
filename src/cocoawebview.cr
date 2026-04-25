@@ -30,6 +30,8 @@ lib Native
   alias CrystalNavCallback = (Void*) -> Nil
   fun set_on_webview_finished_load(cb : CrystalNavCallback)
 
+  fun set_on_webview_resize(cb : CrystalNavCallback)
+
   fun webview_initialize(
     debug : Bool,
     style : Int32,
@@ -368,6 +370,16 @@ module Cocoawebview
           webview.handle_load_finished
         end
       }
+
+      Native.set_on_webview_resize ->(ptr : Void*) {
+        if webview = @@instances[ptr]?
+          webview.on_resize
+        end
+      }
+    end
+
+    def on_resize
+      puts "Webview on resize"
     end
 
     def on_load_finished(&block : CocoaWebview -> Nil)
