@@ -47,6 +47,8 @@ lib Native
   fun webview_eval(ptr : Void*, js : LibC::Char*) : Void
   fun webview_navigate(ptr : Void*, url : LibC::Char*) : Void
 
+  fun webview_hide_buttons(ptr : Void*) : Void
+
   fun webview_set_size(ptr : Void*, width : Int32, height : Int32) : Void
 
   struct SimpleSize
@@ -451,6 +453,10 @@ module Cocoawebview
 
     def center
       Native.webview_center(@webview_ptr)
+    end
+
+    def hide_buttons
+      Native.webview_hide_buttons(@webview_ptr)
     end
 
     def eval(code : String)

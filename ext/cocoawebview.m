@@ -661,6 +661,16 @@ bool webview_is_visible(void *webview_ptr) {
     }
 }
 
+void webview_hide_buttons(void* ptr) {
+    CocoaWebview *window = (__bridge CocoaWebview *)ptr;
+    if (window) {
+        // Hide the Close, Minimize, and Zoom buttons
+        [[window standardWindowButton:NSWindowCloseButton] setHidden:YES];
+        [[window standardWindowButton:NSWindowMiniaturizeButton] setHidden:YES];
+        [[window standardWindowButton:NSWindowZoomButton] setHidden:YES];
+    }
+}
+
 Menu* nsmenu_initialize() {
   Menu *menu = [[Menu alloc] init];
   menu.mainMenu = [NSMenu new];
