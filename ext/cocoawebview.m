@@ -428,13 +428,6 @@ static TimerBridge *timerBridge = nil;
 
 - (void)close {
     if (destroyOnClose) {
-        // 1. Stop any media or JavaScript running inside the webview by loading blank
-        [webView loadHTMLString:@"<html></html>" baseURL:nil];
-        
-        // 2. Break the WKScriptMessageHandler retain cycle explicitly
-        [[webView configuration].userContentController removeScriptMessageHandlerForName:@"native"];
-        
-        // 3. Remove it from the view hierarchy so it can be released
         [webView removeFromSuperview];
         webView = nil;
         [super close]; // Destroys and deallocates the window hierarchy
