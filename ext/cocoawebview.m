@@ -336,6 +336,7 @@ static TimerBridge *timerBridge = nil;
     CocoaWKWebView *webView;
     BOOL showDevTool;
     BOOL shouldMoveTitleButtons;
+    BOOL destroyOnClose;
     /* TODO: Implement fild drop */
     FileDropContainerView *fileDropView;
     int deltaY;
@@ -344,14 +345,15 @@ static TimerBridge *timerBridge = nil;
 - (void)setShouldMoveTitleButtons:(BOOL)flag;
 - (void)setDevTool:(BOOL)flag;
 - (void)setDeltaY:(int)dy;
-- (id)initWithFrame:(NSRect)frame debug:(BOOL)flag style:(int)style moveTitleButtons:(BOOL)moveTitleButtons deltaY:(int)dy hideTitleBar:(BOOL)hideTitleBar;
+- (void)setDestroyOnClose:(BOOL)flag;
+- (id)initWithFrame:(NSRect)frame debug:(BOOL)flag style:(int)style moveTitleButtons:(BOOL)moveTitleButtons deltaY:(int)dy hideTitleBar:(BOOL)hideTitleBar destroyOnClose:(BOOL)destroyOnCloseFlag;
 - (void)eval:(NSString*)code;
 - (void)navigate:(NSString*)url;
 - (void)dragging;
 @end
 
 @implementation CocoaWebview
-- (id)initWithFrame:(NSRect)frame debug:(BOOL)flag style:(int)style moveTitleButtons:(BOOL)moveTitleButtons deltaY:(int)dy  hideTitleBar:(BOOL)hideTitleBar{
+- (id)initWithFrame:(NSRect)frame debug:(BOOL)flag style:(int)style moveTitleButtons:(BOOL)moveTitleButtons deltaY:(int)dy  hideTitleBar:(BOOL)hideTitleBar destroyOnClose:(BOOL)destroyOnCloseFlag{
     self = [super initWithContentRect:frame
                             styleMask:style
                               backing:NSBackingStoreBuffered
@@ -361,6 +363,7 @@ static TimerBridge *timerBridge = nil;
         [self setTitle:@"My Custom Window"];
         [self setDevTool:flag];
         [self setDeltaY:dy];
+        [self setDestroyOnClose:destroyOnCloseFlag];
         [self setDelegate:self];
         if (hideTitleBar) {
             [self setTitlebarAppearsTransparent: YES];
@@ -389,6 +392,10 @@ static TimerBridge *timerBridge = nil;
 
 - (void)setDeltaY:(int)dy {
     deltaY = dy;
+}
+
+- (void)setDestroyOnClose:(BOOL)flag {
+    destroyOnClose = flag;
 }
 
 - (void)setShouldMoveTitleButtons:(BOOL)flag {
@@ -420,7 +427,11 @@ static TimerBridge *timerBridge = nil;
 }
 
 - (void)close {
-    [self orderOut:nil]; // Hide instead of destroy
+    if (destroyOnClose) {
+        [super close]; // Destroys and deallocates the window hierarchy
+    } else {
+        [self orderOut:nil]; // Hide instead of destroy
+    }
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
@@ -567,14 +578,15 @@ const char* nsapp_get_bundle_path() {
     return strdup([path UTF8String]);
 }
 
-id webview_initialize(bool debug, int style, bool move_title_buttons, int delta_y, bool hide_title_bar) {
+id webview_initialize(bool debug, int style, bool move_title_buttons, int delta_y, bool hide_title_bar, bool destroy_on_close) {
     CocoaWebview *webview = [[CocoaWebview alloc] 
         initWithFrame:NSMakeRect(100, 100, 400, 500) 
         debug:debug 
         style:style 
         moveTitleButtons:move_title_buttons
         deltaY:delta_y 
-        hideTitleBar:hide_title_bar];
+        hideTitleBar:hide_title_bar
+        destroyOnClose:destroy_on_close];
     [webview setReleasedWhenClosed:NO];
     return webview;
 }

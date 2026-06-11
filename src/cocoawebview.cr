@@ -37,7 +37,8 @@ lib Native
     style : Int32,
     move_buttons : Bool,
     delta_y : Int32,
-    hide_title_bar : Bool
+    hide_title_bar : Bool,
+    destroy_on_close : Bool
   ) : Void*
 
   fun webview_show(ptr : Void*)
@@ -322,7 +323,7 @@ module Cocoawebview
     @@instances = {} of Void* => CocoaWebview
     @on_blur : (-> Nil)?
 
-    def self.create(debug = false, min = true, resize = true, close = true, move_title_buttons = false, delta_y = 10, hide_title_bar = true, &block : CocoaWebview -> Nil)
+    def self.create(debug = false, min = true, resize = true, close = true, move_title_buttons = false, delta_y = 10, hide_title_bar = true, destroy_on_close = false,  &block : CocoaWebview -> Nil)
       style = NSWindowStyleMaskTitled | NSWindowStyleMaskFullSizeContentView
 
       style = style | NSWindowStyleMaskMiniaturizable if min
@@ -333,18 +334,19 @@ module Cocoawebview
         style &= ~NSWindowStyleMaskFullScreen
       end
 
-      webview = new(debug, style, move_title_buttons, delta_y, hide_title_bar)
+      webview = new(debug, style, move_title_buttons, delta_y, hide_title_bar, destroy_on_close)
       webview.on_load_finished(&block) # Capture the block here
       webview
     end
 
-    def initialize(debug : Bool, style : Int32, move_title_buttons : Bool, delta_y : Int32, hide_title_bar : Bool)
+    def initialize(debug : Bool, style : Int32, move_title_buttons : Bool, delta_y : Int32, hide_title_bar : Bool, destroy_on_close : Bool)
       @webview_ptr = Native.webview_initialize(
         debug,
         style,
         move_title_buttons,
         delta_y,
-        hide_title_bar
+        hide_title_bar,
+        destroy_on_close
       )
 
       if @webview_ptr.null?
