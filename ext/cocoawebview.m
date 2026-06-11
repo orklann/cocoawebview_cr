@@ -438,16 +438,7 @@ static TimerBridge *timerBridge = nil;
     if (destroyOnClose) {
         // Put the cleanup sequence HERE. It fires safely exactly once, 
         // whether the user clicked the red close button OR called close from Crystal.
-        if (webView) {
-            // 1. Stop media/JS immediately
-            [webView loadHTMLString:@"<html></html>" baseURL:nil];
-            
-            // 2. Snap the retain cycle
-            [[webView configuration].userContentController removeScriptMessageHandlerForName:@"native"];
-            
-            webView = nil;
-            [self close];
-        }
+        [self close];
     } else {
         // Prevent default release/close by hiding the window instead
         [notification.object orderOut:nil];
