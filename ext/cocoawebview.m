@@ -438,7 +438,7 @@ static TimerBridge *timerBridge = nil;
     if (destroyOnClose) {
         if (webView) {
             webView.navigationDelegate = nil;
-            webView.UIDelegate = nil
+            webView.UIDelegate = nil;
             [webView.configuration.userContentController removeScriptMessageHandlerForName:@"native"];           
 
             // Remove the webview from the view hierarchy completely
