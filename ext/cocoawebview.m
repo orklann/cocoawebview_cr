@@ -437,12 +437,20 @@ static TimerBridge *timerBridge = nil;
 - (void)windowWillClose:(NSNotification *)notification {
     if (destroyOnClose) {
         if (webView) {
+            // 1. Stop all active network and script tasks
+            [webView stopLoading];
+            
+            // 2. Break delegate retain cycles
             webView.navigationDelegate = nil;
             webView.UIDelegate = nil;
-            [webView.configuration.userContentController removeScriptMessageHandlerForName:@"native"];           
-
-            // Remove the webview from the view hierarchy completely
+            
+            // 3. Clear content hooks if you use custom scripts
+            [webView.configuration.userContentController removeAllUserScripts];
+            
+            // 4. Remove from visual tree
             [webView removeFromSuperview];
+            
+            // 5. Final release
             webView = nil;
         }
     } else {
