@@ -436,8 +436,13 @@ static TimerBridge *timerBridge = nil;
 
 - (void)windowWillClose:(NSNotification *)notification {
     if (destroyOnClose) {
-        // Put the cleanup sequence HERE. It fires safely exactly once, 
-        // whether the user clicked the red close button OR called close from Crystal.
+        if (webView) {
+            [webView.configuration.userContentController removeScriptMessageHandlerForName:@"native"];
+            
+            // Remove the webview from the view hierarchy completely
+            [webView removeFromSuperview];
+            webView = nil;
+        }
     } else {
         // Prevent default release/close by hiding the window instead
         [notification.object orderOut:nil];
