@@ -446,6 +446,7 @@ static TimerBridge *timerBridge = nil;
             [[webView configuration].userContentController removeScriptMessageHandlerForName:@"native"];
             
             webView = nil;
+            [self close];
         }
     } else {
         // Prevent default release/close by hiding the window instead
