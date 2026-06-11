@@ -438,7 +438,6 @@ static TimerBridge *timerBridge = nil;
     if (destroyOnClose) {
         // Put the cleanup sequence HERE. It fires safely exactly once, 
         // whether the user clicked the red close button OR called close from Crystal.
-        [self close];
     } else {
         // Prevent default release/close by hiding the window instead
         [notification.object orderOut:nil];
