@@ -445,8 +445,6 @@ static TimerBridge *timerBridge = nil;
             // 2. Snap the retain cycle
             [[webView configuration].userContentController removeScriptMessageHandlerForName:@"native"];
             
-            // 3. Remove from view tree
-            [webView removeFromSuperview];
             webView = nil;
         }
     } else {
