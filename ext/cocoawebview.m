@@ -428,8 +428,6 @@ static TimerBridge *timerBridge = nil;
 
 - (void)close {
     if (destroyOnClose) {
-        [webView removeFromSuperview];
-        webView = nil;
         [super close]; // Destroys and deallocates the window hierarchy
     } else {
         [self orderOut:nil]; // Hide instead of destroy
@@ -437,8 +435,24 @@ static TimerBridge *timerBridge = nil;
 }
 
 - (void)windowWillClose:(NSNotification *)notification {
-    // Prevent release by hiding the window instead
-    [notification.object orderOut:nil];
+    if (destroyOnClose) {
+        // Put the cleanup sequence HERE. It fires safely exactly once, 
+        // whether the user clicked the red close button OR called close from Crystal.
+        if (webView) {
+            // 1. Stop media/JS immediately
+            [webView loadHTMLString:@"<html></html>" baseURL:nil];
+            
+            // 2. Snap the retain cycle
+            [[webView configuration].userContentController removeScriptMessageHandlerForName:@"native"];
+            
+            // 3. Remove from view tree
+            [webView removeFromSuperview];
+            webView = nil;
+        }
+    } else {
+        // Prevent default release/close by hiding the window instead
+        [notification.object orderOut:nil];
+    }
 }
 
 - (void)dragging {
