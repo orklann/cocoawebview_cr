@@ -450,8 +450,17 @@ static TimerBridge *timerBridge = nil;
                 
                 // 4. Remove from visual tree
                 [webView removeFromSuperview];
+
+                // 5. Explicitly terminate the underlying process via Apple private API
+                // This is safe for macOS and forces Process Monitor to drop the com.apple.WebKit.WebContent process
+                #pragma clang diagnostic push
+                #pragma clang diagnostic ignored "-Wundeclared-selector"
+                if ([webView respondsToSelector:@selector(_close)]) {
+                    [webView performSelector:@selector(_close)];
+                }
+                #pragma clang diagnostic pop
                 
-                // 5. Final release
+                // 6. Final release
                 webView = nil;
             });
         }
