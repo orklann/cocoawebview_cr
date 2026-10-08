@@ -8,6 +8,8 @@ lib Native
   fun nsapp_get_app_icon(path : LibC::Char*) : LibC::Char*
   fun nsapp_is_retina : Bool
   fun nsapp_get_bundle_path : LibC::Char*
+  fun nsapp_get_running_app_paths(out_count : Int32*) : LibC::Char**
+  fun nsapp_free_string_array(array : LibC::Char**) : Void
 
   # Map the setter functions
   alias CrystalCallback = -> Nil
@@ -261,6 +263,24 @@ module Cocoawebview
           app.menu_item_clicked(tag)
         end
       }
+    end
+
+    def get_recent_apps : Array(String)
+      count = 0
+      c_paths = Native.nsapp_get_running_app_paths(out count)
+      return [] of String if c_paths.null?
+
+      result = Array(String).new(count)
+      i = 0
+      while (ptr = c_paths[i]) && !ptr.null?
+        result << String.new(ptr)
+        i += 1
+      end
+
+      # Clean up heap memory allocated by C/Obj-C
+      Native.nsapp_free_string_array(c_paths)
+
+      result
     end
 
     def menu_item_clicked(tag : Int32)

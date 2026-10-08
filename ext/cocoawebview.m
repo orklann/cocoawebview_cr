@@ -812,3 +812,40 @@ void nstimer_invalidate(void* timer_ptr) {
     NSTimer *timer = (__bridge NSTimer *)timer_ptr;
     [timer invalidate];
 }
+
+NSArray<NSString *> * GetRunningAppPaths(void) {
+    NSMutableArray<NSString *> *paths = [NSMutableArray array];
+    
+    for (NSRunningApplication *app in [[NSWorkspace sharedWorkspace] runningApplications]) {
+        if (app.activationPolicy == NSApplicationActivationPolicyRegular && app.bundleURL.path) {
+            [paths addObject:app.bundleURL.path];
+        }
+    }
+    
+    return [paths copy];
+}
+
+// Returns a NULL-terminated array of C-strings (char**)
+const char** nsapp_get_running_app_paths(int *out_count) {
+    NSArray<NSString *> *paths = GetRunningAppPaths();
+    NSUInteger count = [paths count];
+    if (out_count) *out_count = (int)count;
+
+    // Allocate memory for pointers + 1 for NULL terminator
+    const char **c_paths = malloc(sizeof(char *) * (count + 1));
+    for (NSUInteger i = 0; i < count; i++) {
+        c_paths[i] = strdup([[paths objectAtIndex:i] UTF8String]);
+    }
+    c_paths[count] = NULL;
+
+    return c_paths;
+}
+
+// Free the allocated string memory from Crystal
+void nsapp_free_string_array(const char **array) {
+    if (!array) return;
+    for (int i = 0; array[i] != NULL; i++) {
+        free((void *)array[i]);
+    }
+    free(array);
+}
