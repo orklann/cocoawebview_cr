@@ -267,7 +267,7 @@ module Cocoawebview
 
     def get_recent_apps : Array(String)
       count = 0
-      c_paths = Native.nsapp_get_running_app_paths(out count)
+      c_paths = Native.nsapp_get_running_app_paths(pointerof(count))
       return [] of String if c_paths.null?
 
       result = Array(String).new(count)
@@ -277,9 +277,7 @@ module Cocoawebview
         i += 1
       end
 
-      # Clean up heap memory allocated by C/Obj-C
       Native.nsapp_free_string_array(c_paths)
-
       result
     end
 
