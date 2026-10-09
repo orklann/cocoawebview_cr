@@ -270,8 +270,8 @@ module Cocoawebview
 
     def run_on_main_thread(&block)
       box = Box.box(block)
-      LibDispatch.dispatch_async_f(
-        LibDispatch.dispatch_get_main_queue,
+      Native.dispatch_async_f(
+        Native.dispatch_get_main_queue,
         box,
         ->(context) {
           unboxed = Box(typeof(block)).unbox(context)
