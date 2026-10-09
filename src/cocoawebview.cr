@@ -11,6 +11,9 @@ lib Native
   fun nsapp_get_running_app_paths(out_count : Int32*) : LibC::Char**
   fun nsapp_free_string_array(array : LibC::Char**) : Void
 
+  fun dispatch_get_main_queue : Void*
+  fun dispatch_async_f(queue : Void*, context : Void*, work : (Void* -> Void)) : Void
+
   # Map the setter functions
   alias CrystalCallback = -> Nil
   fun set_on_terminate(cb : CrystalCallback)
@@ -263,6 +266,18 @@ module Cocoawebview
           app.menu_item_clicked(tag)
         end
       }
+    end
+
+    def run_on_main_thread(&block)
+      box = Box.box(block)
+      LibDispatch.dispatch_async_f(
+        LibDispatch.dispatch_get_main_queue,
+        box,
+        ->(context) {
+          unboxed = Box(typeof(block)).unbox(context)
+          unboxed.call
+        }
+      )
     end
 
     def get_recent_apps : Array(String)
