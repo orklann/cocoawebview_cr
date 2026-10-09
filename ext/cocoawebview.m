@@ -849,3 +849,11 @@ void nsapp_free_string_array(const char **array) {
     }
     free(array);
 }
+
+void run_on_main_queue(void (^block)(void)) {
+    if ([NSThread isMainThread]) {
+        block();
+    } else {
+        [[NSOperationQueue mainQueue] addOperationWithBlock:block];
+    }
+}
